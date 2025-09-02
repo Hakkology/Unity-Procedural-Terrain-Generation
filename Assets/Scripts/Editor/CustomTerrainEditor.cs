@@ -21,7 +21,8 @@ public class CustomTerrainEditor : Editor
         serializedObject.Update();
 
         ProceduralTerrain terrain = (ProceduralTerrain)target;
-        showRandom = EditorGUILayout.Foldout(showRandom, "Random");
+
+        showRandom = EditorGUILayout.Foldout(showRandom, "Random Heights");
         if (showRandom)
         {
             EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
@@ -31,7 +32,15 @@ public class CustomTerrainEditor : Editor
             {
                 terrain.RandomTerrain();
             }
+
+            EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+            if (GUILayout.Button("Reset Terrain"))
+            {
+                terrain.ResetTerrain();
+            }
         }
+
+
 
         serializedObject.ApplyModifiedProperties();
     }
