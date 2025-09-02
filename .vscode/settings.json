@@ -52,5 +52,4 @@
         "Temp/": true
     },
     "dotnet.defaultSolution": "Unity-Procedural-Terrain-Generation.sln",
-    "git.path": "C:\\Program Files\\Git\\cmd\\git.exe"
 }

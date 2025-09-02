@@ -8,12 +8,18 @@ public class CustomTerrainEditor : Editor
 {
     // foldouts
     bool showRandom = false;
+    bool showLoadHeights = false;
 
     // properties
     SerializedProperty randomHeightRange;
+    SerializedProperty heightMapScale;
+    SerializedProperty heightMapImage;
+
     void OnEnable()
     {
-        randomHeightRange = serializedObject.FindProperty("RandomHeightRange");
+        randomHeightRange = serializedObject.FindProperty("randomHeightRange");
+        heightMapScale = serializedObject.FindProperty("heightMapScale");
+        heightMapImage = serializedObject.FindProperty("heightMapImage");
     }
 
     public override void OnInspectorGUI()
@@ -32,12 +38,29 @@ public class CustomTerrainEditor : Editor
             {
                 terrain.RandomTerrain();
             }
+        }
 
+        showLoadHeights = EditorGUILayout.Foldout(showLoadHeights, "Load Heights");
+        if (showLoadHeights)
+        {
             EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
-            if (GUILayout.Button("Reset Terrain"))
+            GUILayout.Label("Load Heights from Texture", EditorStyles.boldLabel);
+            EditorGUILayout.PropertyField(heightMapScale);
+            EditorGUILayout.PropertyField(heightMapImage);
+            if (GUILayout.Button("Load Texture"))
             {
-                terrain.ResetTerrain();
+                terrain.LoadTexture(keepHeights: false);
             }
+            if (GUILayout.Button("Load Texture with Heights"))
+            {
+                terrain.LoadTexture(keepHeights: true);
+            }
+        }
+
+        EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+        if (GUILayout.Button("Reset Terrain"))
+        {
+            terrain.ResetTerrain();
         }
 
 

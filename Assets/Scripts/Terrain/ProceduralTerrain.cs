@@ -4,13 +4,16 @@ using UnityEditor;
 [ExecuteInEditMode]
 public class ProceduralTerrain : MonoBehaviour
 {
-    public Vector2 RandomHeightRange = new Vector2(0, 0.1f);
+    public Vector2 randomHeightRange = new Vector2(0, 0.1f);
 
     public Texture2D heightMapImage;
     public Vector3 heightMapScale = new Vector3(1, 1, 1);
     
     public Terrain terrain;
     public TerrainData terrainData;
+
+    int heightMapRes => terrainData.heightmapResolution;
+    float[,] GetHeights() => terrainData.GetHeights(0, 0, heightMapRes, heightMapRes);
 
     void OnEnable()
     {
@@ -36,20 +39,54 @@ public class ProceduralTerrain : MonoBehaviour
 
     public void RandomTerrain()
     {
-        float[,] heightMap = terrainData.GetHeights(0, 0, terrainData.heightmapResolution, terrainData.heightmapResolution);
+        float[,] heightMap = GetHeights();
         for (int x = 0; x < terrainData.heightmapResolution; x++) // ++x on content, check if anything differs
         {
-            for (var z = 0; z < terrainData.heightmapResolution; z++) // ++z on content, check if anything differs
+            for (var z = 0; z < heightMapRes; z++) // ++z on content, check if anything differs
             {
-                heightMap[x, z] += Random.Range(RandomHeightRange.x, RandomHeightRange.y);
+                heightMap[x, z] += Random.Range(randomHeightRange.x, randomHeightRange.y);
             }
         }
         terrainData.SetHeights(0, 0, heightMap);
     }
 
+    /// <summary>
+    ///  parameter is for adding or creating the terrain. image resolution and the texture heightmap resolution is proportional.
+    /// </summary>
+    /// <param name="keepHeights"></param> 
+    public void LoadTexture(bool keepHeights = false)
+    {
+        float[,] heightMap;
+
+        if (!keepHeights)
+        {
+            heightMap = new float[heightMapRes, heightMapRes];
+            for (int x = 0; x < heightMapRes; x++)
+            {
+                for (int z = 0; z < heightMapRes; z++)
+                {
+                    heightMap[x, z] = heightMapImage.GetPixel((int)(x * heightMapScale.x), (int)(z * heightMapScale.z)).grayscale * heightMapScale.y;
+                }
+            }
+            terrainData.SetHeights(0, 0, heightMap);
+        }
+        else
+        {
+            heightMap = GetHeights();
+            for (int x = 0; x < heightMapRes; x++)
+            {
+                for (int z = 0; z < heightMapRes; z++)
+                {
+                    heightMap[x, z] += heightMapImage.GetPixel((int)(x * heightMapScale.x), (int)(z * heightMapScale.z)).grayscale * heightMapScale.y;
+                }
+            }
+            terrainData.SetHeights(0, 0, heightMap);
+        }
+    }
+
     public void ResetTerrain()
     {
-        float[,] heightMap = new float[terrainData.heightmapResolution, terrainData.heightmapResolution];
+        float[,] heightMap = new float[heightMapRes, heightMapRes];
         terrainData.SetHeights(0, 0, heightMap);
     }
 
@@ -68,11 +105,5 @@ public class ProceduralTerrain : MonoBehaviour
             SerializedProperty newTagProp = tagsProp.GetArrayElementAtIndex(0);
             newTagProp.stringValue = newTag;
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 }
