@@ -8,12 +8,16 @@ public class PerlinTerrain : BaseTerrain
     public int perlinXOffset = 0;
     public int perlinYOffset = 0;
 
+    public int perlinOctaves = 3;
+    public float perlinPersistance = 8;
+    public float perlinHeightScale = 0.09f;
+
     public override void GenerateTerrain()
     {
         GeneratePerlinTerrain();
     }
 
-    public void GeneratePerlinTerrain(bool add = false)
+    public void GeneratePerlinTerrain(bool add = false, bool fractal = false)
     {
         float[,] heightMap = GetHeights();
 
@@ -21,10 +25,21 @@ public class PerlinTerrain : BaseTerrain
         {
             for (int x = 0; x < heightMapRes; x++)
             {
-                if (add)
-                    heightMap[x, y] += Mathf.PerlinNoise((x + perlinXOffset) * perlinXScale, (y + perlinYOffset) * perlinYScale);
+                if (fractal)
+                {
+                    if (add)
+                        heightMap[x, y] += Utils.FractalBrownianMotion((x + perlinXOffset) * perlinXScale, (y + perlinYOffset) * perlinYScale, perlinOctaves, perlinPersistance) * perlinHeightScale;
+                    else
+                        heightMap[x, y] = Utils.FractalBrownianMotion((x + perlinXOffset) * perlinXScale, (y + perlinYOffset) * perlinYScale, perlinOctaves, perlinPersistance) * perlinHeightScale;
+                }
                 else
-                    heightMap[x, y] = Mathf.PerlinNoise((x + perlinXOffset) * perlinXScale, (y + perlinYOffset) * perlinYScale);
+                {
+                    if (add)
+                        heightMap[x, y] += Mathf.PerlinNoise((x + perlinXOffset) * perlinXScale, (y + perlinYOffset) * perlinYScale);
+                    else
+                        heightMap[x, y] = Mathf.PerlinNoise((x + perlinXOffset) * perlinXScale, (y + perlinYOffset) * perlinYScale);
+                }
+
             }
         }
 
