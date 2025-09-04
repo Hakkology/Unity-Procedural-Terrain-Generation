@@ -5,6 +5,9 @@ public class PerlinTerrain : BaseTerrain
     public float perlinXScale = 0.01f;
     public float perlinYScale = 0.01f;
 
+    public int perlinXOffset = 0;
+    public int perlinYOffset = 0;
+
     public override void GenerateTerrain()
     {
         GeneratePerlinTerrain();
@@ -19,9 +22,9 @@ public class PerlinTerrain : BaseTerrain
             for (int x = 0; x < heightMapRes; x++)
             {
                 if (add)
-                    heightMap[x, y] += Mathf.PerlinNoise(x * perlinXScale, y * perlinYScale);
+                    heightMap[x, y] += Mathf.PerlinNoise((x + perlinXOffset) * perlinXScale, (y + perlinYOffset) * perlinYScale);
                 else
-                    heightMap[x, y] = Mathf.PerlinNoise(x * perlinXScale, y * perlinYScale);
+                    heightMap[x, y] = Mathf.PerlinNoise((x + perlinXOffset) * perlinXScale, (y + perlinYOffset) * perlinYScale);
             }
         }
 
