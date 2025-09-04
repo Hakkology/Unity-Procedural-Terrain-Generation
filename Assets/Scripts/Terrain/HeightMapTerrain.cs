@@ -14,34 +14,17 @@ public class HeightMapTerrain : BaseTerrain
     ///  parameter is for adding or creating the terrain. image resolution and the texture heightmap resolution is proportional.
     /// </summary>
     /// <param name="keepHeights"></param> 
-    public void LoadTexture(bool keepHeights = false)
+    public void LoadTexture()
     {
-        float[,] heightMap;
-
-        if (!keepHeights)
+        float[,] heightMap = GetHeightMap();
+        for (int x = 0; x < heightMapRes; x++)
         {
-            heightMap = new float[heightMapRes, heightMapRes];
-            for (int x = 0; x < heightMapRes; x++)
+            for (int z = 0; z < heightMapRes; z++)
             {
-                for (int z = 0; z < heightMapRes; z++)
-                {
-                    heightMap[x, z] = heightMapImage.GetPixel((int)(x * heightMapScale.x), (int)(z * heightMapScale.z)).grayscale * heightMapScale.y;
-                }
+                heightMap[x, z] += heightMapImage.GetPixel((int)(x * heightMapScale.x), (int)(z * heightMapScale.z)).grayscale * heightMapScale.y;
             }
-            terrainData.SetHeights(0, 0, heightMap);
         }
-        else
-        {
-            heightMap = GetHeights();
-            for (int x = 0; x < heightMapRes; x++)
-            {
-                for (int z = 0; z < heightMapRes; z++)
-                {
-                    heightMap[x, z] += heightMapImage.GetPixel((int)(x * heightMapScale.x), (int)(z * heightMapScale.z)).grayscale * heightMapScale.y;
-                }
-            }
-            terrainData.SetHeights(0, 0, heightMap);
-        }
+        terrainData.SetHeights(0, 0, heightMap);
     }
 
 }

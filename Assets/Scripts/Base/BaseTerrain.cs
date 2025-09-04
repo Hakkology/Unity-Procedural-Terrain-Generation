@@ -5,9 +5,17 @@ public class BaseTerrain : MonoBehaviour, IGeneratable
 {
     protected int heightMapRes => terrainData.heightmapResolution;
     protected float[,] GetHeights() => terrainData.GetHeights(0, 0, heightMapRes, heightMapRes);
+    protected float[,] GetHeightMap()
+    {
+        if (!resetTerrain)
+            return GetHeights();
+        else
+            return new float[heightMapRes, heightMapRes];
+    }
 
     public Terrain terrain;  
     public TerrainData terrainData;
+    public bool resetTerrain = true;
 
     void OnEnable()
     {

@@ -13,7 +13,7 @@ public class RandomTerrain : BaseTerrain
 
     public void GenerateRandomTerrain()
     {
-        float[,] heightMap = GetHeights();
+        float[,] heightMap = GetHeightMap();
         for (int x = 0; x < heightMapRes; x++) // ++x on content, check if anything differs
         {
             for (var z = 0; z < heightMapRes; z++) // ++z on content, check if anything differs

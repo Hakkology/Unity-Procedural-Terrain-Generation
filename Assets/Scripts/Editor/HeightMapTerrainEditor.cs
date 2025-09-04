@@ -29,15 +29,4 @@ public class HeightMapTerrainEditor : BaseTerrainEditor
             EditorGUILayout.PropertyField(heightMapImage);
         }
     }
-
-    protected override void DrawAdditionalButtons()
-    {
-        HeightMapTerrain terrain = (HeightMapTerrain)target;
-
-        if (GUILayout.Button("Generate + Keep Heights"))
-        {
-            terrain.LoadTexture(true);
-        }
-        EditorGUILayout.Space();
-    }
 }

@@ -6,11 +6,15 @@ public class BaseTerrainEditor : Editor
 {
     protected SerializedProperty terrainProp;
     protected SerializedProperty terrainDataProp;
+    protected SerializedProperty resetTerrain;
+
+    bool showCommonParameters = true;
 
     protected virtual void OnEnable()
     {
         terrainProp = serializedObject.FindProperty("terrain");
         terrainDataProp = serializedObject.FindProperty("terrainData");
+        resetTerrain = serializedObject.FindProperty("resetTerrain");
     }
 
     public override void OnInspectorGUI()
@@ -46,6 +50,17 @@ public class BaseTerrainEditor : Editor
     {
         EditorGUILayout.PropertyField(terrainProp);
         EditorGUILayout.PropertyField(terrainDataProp);
+
+        EditorGUILayout.Space();
+        EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+
+        showCommonParameters = EditorGUILayout.Foldout(showCommonParameters, "Common Parameters");
+        if (showCommonParameters)
+        {
+            EditorGUILayout.PropertyField(resetTerrain);
+        }
+
+        EditorGUILayout.Space();
     }
 
     protected virtual void DrawAdditionalButtons() { }

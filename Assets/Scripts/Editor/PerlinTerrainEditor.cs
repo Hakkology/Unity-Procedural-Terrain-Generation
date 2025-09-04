@@ -53,19 +53,9 @@ public class PerlinTerrainEditor : BaseTerrainEditor
     {
         PerlinTerrain terrain = (PerlinTerrain)target;
 
-        if (GUILayout.Button("Generate + Keep Heights"))
+        if (GUILayout.Button("Generate Terrain + Fractal"))
         {
-            terrain.GeneratePerlinTerrain(true, false);
-        }
-        EditorGUILayout.Space();
-        if (GUILayout.Button("Generate + Fractal"))
-        {
-            terrain.GeneratePerlinTerrain(false, true);
-        }
-        EditorGUILayout.Space();
-        if (GUILayout.Button("Generate + Fractal + Keep Heights"))
-        {
-            terrain.GeneratePerlinTerrain(true, true);
+            terrain.GeneratePerlinTerrain(true);
         }
         EditorGUILayout.Space();
     }
