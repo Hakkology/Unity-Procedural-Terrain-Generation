@@ -1,19 +1,18 @@
 using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof(HeightMapTerrain))]
-public class HeightMapTerrainEditor : BaseTerrainEditor
+[CustomEditor(typeof(PerlinTerrain))]
+public class PerlinTerrainEditor : BaseTerrainEditor
 {
-    SerializedProperty heightMapImage;
-    SerializedProperty heightMapScale;
+    SerializedProperty perlinXScale;
+    SerializedProperty perlinYScale;
     bool showLoadHeights = true;
 
-    // düzeltme: protected override void OnEnable()
     protected override void OnEnable()
     {
         base.OnEnable();
-        heightMapImage = serializedObject.FindProperty("heightMapImage");
-        heightMapScale = serializedObject.FindProperty("heightMapScale");
+        perlinXScale = serializedObject.FindProperty("perlinXScale");
+        perlinYScale = serializedObject.FindProperty("perlinYScale");
     }
 
     protected override void DrawTerrainParameters()
@@ -25,18 +24,18 @@ public class HeightMapTerrainEditor : BaseTerrainEditor
         {
             EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
             GUILayout.Label("Load Heights from Texture", EditorStyles.boldLabel);
-            EditorGUILayout.PropertyField(heightMapScale);
-            EditorGUILayout.PropertyField(heightMapImage);
+            EditorGUILayout.PropertyField(perlinXScale);
+            EditorGUILayout.PropertyField(perlinYScale);
         }
     }
-
+    
     protected override void DrawAdditionalButtons()
     {
-        HeightMapTerrain terrain = (HeightMapTerrain)target;
+        PerlinTerrain terrain = (PerlinTerrain)target;
 
         if (GUILayout.Button("Generate + Keep Heights"))
         {
-            terrain.LoadTexture(true);
+            terrain.GeneratePerlinTerrain(true);
         }
         EditorGUILayout.Space();
     }

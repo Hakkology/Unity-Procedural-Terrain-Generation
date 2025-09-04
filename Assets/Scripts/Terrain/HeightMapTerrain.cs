@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class HeightMapTerrain : BaseTerrain 
+public class HeightMapTerrain : BaseTerrain
 {
     public Texture2D heightMapImage;
     public Vector3 heightMapScale = new Vector3(1, 1, 1);
@@ -43,4 +43,5 @@ public class HeightMapTerrain : BaseTerrain
             terrainData.SetHeights(0, 0, heightMap);
         }
     }
+
 }

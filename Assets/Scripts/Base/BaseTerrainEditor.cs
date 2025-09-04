@@ -1,21 +1,52 @@
 using UnityEditor;
+using UnityEngine;
 
 [CustomEditor(typeof(BaseTerrain), true)]
-public class BaseTerrainEditor : CustomTerrainEditor
+public class BaseTerrainEditor : Editor
 {
     protected SerializedProperty terrainProp;
     protected SerializedProperty terrainDataProp;
 
-    // protected virtual yaptık
     protected virtual void OnEnable()
     {
         terrainProp = serializedObject.FindProperty("terrain");
         terrainDataProp = serializedObject.FindProperty("terrainData");
     }
 
-    protected override void DrawTerrainParameters()
+    public override void OnInspectorGUI()
+    {
+        serializedObject.Update();
+
+        //DrawDefaultInspector();
+        DrawTerrainParameters();
+
+        EditorGUILayout.Space();
+        EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+        EditorGUILayout.Space();
+
+        IGeneratable terrain = (IGeneratable)target;
+
+        if (GUILayout.Button("Generate Terrain"))
+        {
+            terrain.GenerateTerrain();
+        }
+
+        EditorGUILayout.Space();
+        DrawAdditionalButtons();
+
+        if (GUILayout.Button("Reset Terrain"))
+        {
+            terrain.ResetTerrain();
+        }
+
+        serializedObject.ApplyModifiedProperties();
+    }
+
+    protected virtual void DrawTerrainParameters()
     {
         EditorGUILayout.PropertyField(terrainProp);
         EditorGUILayout.PropertyField(terrainDataProp);
     }
+
+    protected virtual void DrawAdditionalButtons() { }
 }
