@@ -1,3 +1,4 @@
+using EditorGUITable;
 using UnityEditor;
 using UnityEngine;
 
@@ -13,7 +14,11 @@ public class PerlinTerrainEditor : BaseTerrainEditor
     SerializedProperty perlinPersistance;
     SerializedProperty perlinHeightScale;
 
-    bool showLoadHeights = true;
+    GUITableState perlinParameterTable;
+    SerializedProperty perlinParameters;
+
+    bool showPerlin = false;
+    bool showMultiplePerlin = false;
 
     protected override void OnEnable()
     {
@@ -25,14 +30,17 @@ public class PerlinTerrainEditor : BaseTerrainEditor
         perlinOctaves = serializedObject.FindProperty("perlinOctaves");
         perlinPersistance = serializedObject.FindProperty("perlinPersistance");
         perlinHeightScale = serializedObject.FindProperty("perlinHeightScale");
+
+        perlinParameterTable = new GUITableState("perlinParameterTable");
+        perlinParameters = serializedObject.FindProperty("perlinParameters");
     }
 
     protected override void DrawTerrainParameters()
     {
         base.DrawTerrainParameters();
 
-        showLoadHeights = EditorGUILayout.Foldout(showLoadHeights, "Heightmap Settings");
-        if (showLoadHeights)
+        showPerlin = EditorGUILayout.Foldout(showPerlin, "Perlin Settings");
+        if (showPerlin)
         {
             EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
             GUILayout.Label("Perlin Noise", EditorStyles.boldLabel);
@@ -41,11 +49,38 @@ public class PerlinTerrainEditor : BaseTerrainEditor
             EditorGUILayout.Slider(perlinYScale, 0, 1, new GUIContent("Y Scale"));
             EditorGUILayout.IntSlider(perlinXOffset, 0, 10000, new GUIContent("X Offset"));
             EditorGUILayout.IntSlider(perlinYOffset, 0, 10000, new GUIContent("Y Offset"));
-            
+            EditorGUILayout.Space();
+
             GUILayout.Label("Brownian Perlin Settings", EditorStyles.boldLabel);
             EditorGUILayout.IntSlider(perlinOctaves, 1, 10, new GUIContent("Octaves"));
             EditorGUILayout.Slider(perlinPersistance, .1f, 10, new GUIContent("Persistance"));
             EditorGUILayout.Slider(perlinHeightScale, 0, 1, new GUIContent("Height Scale"));
+        }
+
+        showMultiplePerlin = EditorGUILayout.Foldout(showMultiplePerlin, "Multiple Perlin Settings");
+        if (showMultiplePerlin)
+        {
+            EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+            GUILayout.Label("Mulitple Perlin Noise", EditorStyles.boldLabel);
+            perlinParameterTable = GUITableLayout.DrawTable(perlinParameterTable,
+                                        serializedObject.FindProperty("perlinParameters"));
+            GUILayout.Space(20);
+
+            EditorGUILayout.BeginHorizontal();
+
+            if (GUILayout.Button("+")) {
+
+                terrain.AddNewPerlin();
+            }
+            if (GUILayout.Button("-")) {
+
+                terrain.RemovePerlin();
+            }
+            EditorGUILayout.EndHorizontal();
+            if (GUILayout.Button("Apply Multiple Perlin")) {
+
+                terrain.MultiplePerlinTerrain();
+            }
         }
     }
 

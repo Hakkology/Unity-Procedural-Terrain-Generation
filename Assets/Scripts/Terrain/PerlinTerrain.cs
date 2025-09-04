@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PerlinTerrain : BaseTerrain
@@ -11,6 +12,11 @@ public class PerlinTerrain : BaseTerrain
     public int perlinOctaves = 3;
     public float perlinPersistance = 8;
     public float perlinHeightScale = 0.09f;
+
+    public List<PerlinParameters> perlinParameters = new List<PerlinParameters>()
+    {
+        new PerlinParameters()
+    };
 
     public override void GenerateTerrain()
     {
@@ -38,5 +44,46 @@ public class PerlinTerrain : BaseTerrain
         }
 
         terrainData.SetHeights(0, 0, heightMap);
+    }
+
+    public void GenerateMultiplePerlinTerrain()
+    {
+        float[,] heightMap = GetHeightMap();
+
+        for (int y = 0; y < heightMapRes; y++)
+        {
+            for (int x = 0; x < heightMapRes; x++)
+            {
+                foreach (PerlinParameters p in perlinParameters)
+                {
+                    heightMap[x, y] += Utils.FractalBrownianMotion((x + p.mPerlinXOffset) * p.mPerlinXScale, (y + p.mPerlinYOffset) * p.mPerlinYScale, p.mPerlinOctaves, p.mPerlinPersistance) * p.mPerlinHeightScale;
+                }
+            }
+        }
+
+        terrainData.SetHeights(0, 0, heightMap);
+    }
+
+    public void AddNewPerlin()
+    {
+        perlinParameters.Add(new PerlinParameters());
+    }
+
+    public void RemovePerlin()
+    {
+        List<PerlinParameters> keptPerlinParameters = new List<PerlinParameters>();
+        for (int i = 0; i < perlinParameters.Count; i++)
+        {
+            if (!perlinParameters[i].remove)
+            {
+                keptPerlinParameters.Add(perlinParameters[i]);
+            }
+        }
+        
+        if (keptPerlinParameters.Count == 0)
+        {
+            keptPerlinParameters.Add(perlinParameters[0]);
+        }
+        perlinParameters = keptPerlinParameters;
     }
 }
