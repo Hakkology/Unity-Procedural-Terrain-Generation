@@ -40,7 +40,7 @@ public class ProceduralTerrain : MonoBehaviour
     public void RandomTerrain()
     {
         float[,] heightMap = GetHeights();
-        for (int x = 0; x < terrainData.heightmapResolution; x++) // ++x on content, check if anything differs
+        for (int x = 0; x < heightMapRes; x++) // ++x on content, check if anything differs
         {
             for (var z = 0; z < heightMapRes; z++) // ++z on content, check if anything differs
             {

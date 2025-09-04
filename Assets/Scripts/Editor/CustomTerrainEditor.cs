@@ -33,24 +33,31 @@ public class CustomTerrainEditor : Editor
         {
             EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
             GUILayout.Label("Set Heights between Random Values", EditorStyles.boldLabel);
+            EditorGUILayout.Space();
             EditorGUILayout.PropertyField(randomHeightRange);
+            EditorGUILayout.Space();
             if (GUILayout.Button("Random Heights"))
             {
                 terrain.RandomTerrain();
             }
         }
 
+        EditorGUILayout.Space();
+
         showLoadHeights = EditorGUILayout.Foldout(showLoadHeights, "Load Heights");
         if (showLoadHeights)
         {
             EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
             GUILayout.Label("Load Heights from Texture", EditorStyles.boldLabel);
+            EditorGUILayout.Space();
             EditorGUILayout.PropertyField(heightMapScale);
             EditorGUILayout.PropertyField(heightMapImage);
+            EditorGUILayout.Space();
             if (GUILayout.Button("Load Texture"))
             {
                 terrain.LoadTexture(keepHeights: false);
             }
+            EditorGUILayout.Space();
             if (GUILayout.Button("Load Texture with Heights"))
             {
                 terrain.LoadTexture(keepHeights: true);
@@ -62,8 +69,6 @@ public class CustomTerrainEditor : Editor
         {
             terrain.ResetTerrain();
         }
-
-
 
         serializedObject.ApplyModifiedProperties();
     }
