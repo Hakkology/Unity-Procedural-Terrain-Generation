@@ -551,6 +551,7 @@ MonoBehaviour:
   terrain: {fileID: 470084382}
   terrainData: {fileID: 15600000, guid: 8d1662e69504cd196b4cbe6612c7b871, type: 2}
   resetTerrain: 1
+  voronoiFalloff: 0.5
 --- !u!4 &1666235873
 Transform:
   m_ObjectHideFlags: 0
