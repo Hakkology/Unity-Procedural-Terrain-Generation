@@ -13,6 +13,9 @@ public class PerlinTerrain : BaseTerrain
     public float perlinPersistance = 8;
     public float perlinHeightScale = 0.09f;
 
+    public float perlinRidgeConstant = 0.5f;
+
+
     public List<PerlinParameters> perlinParameters = new List<PerlinParameters>()
     {
         new PerlinParameters()
@@ -58,6 +61,23 @@ public class PerlinTerrain : BaseTerrain
                 {
                     heightMap[x, y] += Utils.FractalBrownianMotion((x + p.mPerlinXOffset) * p.mPerlinXScale, (y + p.mPerlinYOffset) * p.mPerlinYScale, p.mPerlinOctaves, p.mPerlinPersistance) * p.mPerlinHeightScale;
                 }
+            }
+        }
+
+        terrainData.SetHeights(0, 0, heightMap);
+    }
+
+    public void GenerateRidgeNoiseTerrain()
+    {
+        ResetTerrain();
+        GenerateMultiplePerlinTerrain();
+        float[,] heightMap = GetHeightMap();
+
+        for (int y = 0; y < heightMapRes; y++)
+        {
+            for (int x = 0; x < heightMapRes; x++)
+            {
+                heightMap[x, y] = 1f - Mathf.Abs(heightMap[x, y] - perlinRidgeConstant);
             }
         }
 

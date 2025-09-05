@@ -545,7 +545,7 @@ Transform:
   m_GameObject: {fileID: 1797291162}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 500, y: 64.83245, z: 500}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -602,11 +602,37 @@ MonoBehaviour:
   resetTerrain: 0
   perlinXScale: 0.02
   perlinYScale: 0.02
-  perlinXOffset: 2874
-  perlinYOffset: 1300
+  perlinXOffset: 0
+  perlinYOffset: 0
   perlinOctaves: 2
-  perlinPersistance: 5.56
-  perlinHeightScale: 0.079
+  perlinPersistance: 4.25
+  perlinHeightScale: 0.051
+  perlinRidgeConstant: 0.499
+  perlinParameters:
+  - mPerlinXScale: 0.01
+    mPerlinYScale: 0.01
+    mPerlinXOffset: 0
+    mPerlinYOffset: 0
+    mPerlinOctaves: 5
+    mPerlinPersistance: 3
+    mPerlinHeightScale: 0.03
+    remove: 0
+  - mPerlinXScale: 0.01
+    mPerlinYScale: 0.01
+    mPerlinXOffset: 0
+    mPerlinYOffset: 0
+    mPerlinOctaves: 2
+    mPerlinPersistance: 5
+    mPerlinHeightScale: 0.05
+    remove: 0
+  - mPerlinXScale: 0.01
+    mPerlinYScale: 0.01
+    mPerlinXOffset: 0
+    mPerlinYOffset: 0
+    mPerlinOctaves: 3
+    mPerlinPersistance: 8
+    mPerlinHeightScale: 0.02
+    remove: 0
 --- !u!4 &1805862780
 Transform:
   m_ObjectHideFlags: 0
@@ -616,7 +642,7 @@ Transform:
   m_GameObject: {fileID: 1805862778}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 500, y: 64.83245, z: 500}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

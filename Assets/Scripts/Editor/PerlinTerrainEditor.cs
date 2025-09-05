@@ -13,6 +13,7 @@ public class PerlinTerrainEditor : BaseTerrainEditor
     SerializedProperty perlinOctaves;
     SerializedProperty perlinPersistance;
     SerializedProperty perlinHeightScale;
+    SerializedProperty perlinRidgeConstant;
 
     GUITableState perlinParameterTable;
     SerializedProperty perlinParameters;
@@ -30,6 +31,7 @@ public class PerlinTerrainEditor : BaseTerrainEditor
         perlinOctaves = serializedObject.FindProperty("perlinOctaves");
         perlinPersistance = serializedObject.FindProperty("perlinPersistance");
         perlinHeightScale = serializedObject.FindProperty("perlinHeightScale");
+        perlinRidgeConstant = serializedObject.FindProperty("perlinRidgeConstant");
 
         perlinParameterTable = new GUITableState("perlinParameterTable");
         perlinParameters = serializedObject.FindProperty("perlinParameters");
@@ -38,6 +40,7 @@ public class PerlinTerrainEditor : BaseTerrainEditor
     protected override void DrawTerrainParameters()
     {
         base.DrawTerrainParameters();
+        
 
         showPerlin = EditorGUILayout.Foldout(showPerlin, "Perlin Settings");
         if (showPerlin)
@@ -55,32 +58,36 @@ public class PerlinTerrainEditor : BaseTerrainEditor
             EditorGUILayout.IntSlider(perlinOctaves, 1, 10, new GUIContent("Octaves"));
             EditorGUILayout.Slider(perlinPersistance, .1f, 10, new GUIContent("Persistance"));
             EditorGUILayout.Slider(perlinHeightScale, 0, 1, new GUIContent("Height Scale"));
+            EditorGUILayout.Space();
+
+            GUILayout.Label("Ridge Perlin Settings", EditorStyles.boldLabel);
+            EditorGUILayout.Slider(perlinRidgeConstant, 0, 1, new GUIContent("Ridge Constant"));
         }
 
+        EditorGUILayout.Space();
         showMultiplePerlin = EditorGUILayout.Foldout(showMultiplePerlin, "Multiple Perlin Settings");
         if (showMultiplePerlin)
         {
             EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
-            GUILayout.Label("Mulitple Perlin Noise", EditorStyles.boldLabel);
-            perlinParameterTable = GUITableLayout.DrawTable(perlinParameterTable,
-                                        serializedObject.FindProperty("perlinParameters"));
-            GUILayout.Space(20);
+            GUILayout.Label("Multiple Perlin Noise", EditorStyles.boldLabel);
 
+            PerlinTerrain terrain = (PerlinTerrain)target;
+            EditorGUILayout.Space();
             EditorGUILayout.BeginHorizontal();
-
-            if (GUILayout.Button("+")) {
-
+            if (GUILayout.Button("+"))
+            {
                 terrain.AddNewPerlin();
             }
-            if (GUILayout.Button("-")) {
-
+            if (GUILayout.Button("-"))
+            {
                 terrain.RemovePerlin();
             }
             EditorGUILayout.EndHorizontal();
-            if (GUILayout.Button("Apply Multiple Perlin")) {
+            EditorGUILayout.Space();
 
-                terrain.MultiplePerlinTerrain();
-            }
+            perlinParameterTable = GUITableLayout.DrawTable(perlinParameterTable,
+                                        serializedObject.FindProperty("perlinParameters"));
+            GUILayout.Space(20);
         }
     }
 
@@ -88,9 +95,21 @@ public class PerlinTerrainEditor : BaseTerrainEditor
     {
         PerlinTerrain terrain = (PerlinTerrain)target;
 
-        if (GUILayout.Button("Generate Terrain + Fractal"))
+        if (GUILayout.Button("Generate Terrain + Perlin Fractal"))
         {
             terrain.GeneratePerlinTerrain(true);
+        }
+        EditorGUILayout.Space();
+
+        if (GUILayout.Button("Generate Terrain + Perlin Multiple"))
+        {
+            terrain.GenerateMultiplePerlinTerrain();
+        }
+        EditorGUILayout.Space();
+
+        if (GUILayout.Button("Generate Terrain + Perlin Multiple + Ridge"))
+        {
+            terrain.GenerateRidgeNoiseTerrain();
         }
         EditorGUILayout.Space();
     }
