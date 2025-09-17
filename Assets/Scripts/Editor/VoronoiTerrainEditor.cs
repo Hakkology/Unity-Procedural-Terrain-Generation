@@ -9,6 +9,9 @@ public class VoronoiTerrainEditor : BaseTerrainEditor
     SerializedProperty voronoiDropoff;
     SerializedProperty voronoiMinHeight;
     SerializedProperty voronoiMaxHeight;
+    SerializedProperty voronoiRoughness;
+    SerializedProperty voronoiSharpness;
+    SerializedProperty voronoiPlateau;
     bool showVoronoiSection = true;
 
     protected override void OnEnable()
@@ -19,6 +22,9 @@ public class VoronoiTerrainEditor : BaseTerrainEditor
         voronoiPeakCount = serializedObject.FindProperty("voronoiPeakCount");
         voronoiMinHeight = serializedObject.FindProperty("voronoiMinHeight");
         voronoiMaxHeight = serializedObject.FindProperty("voronoiMaxHeight");
+        voronoiRoughness = serializedObject.FindProperty("voronoiRoughness");
+        voronoiSharpness = serializedObject.FindProperty("voronoiSharpness");
+        voronoiPlateau = serializedObject.FindProperty("voronoiPlateau");
     }
 
     protected override void DrawTerrainParameters()
@@ -37,6 +43,12 @@ public class VoronoiTerrainEditor : BaseTerrainEditor
             EditorGUILayout.Slider(voronoiDropoff, 0, 10, new GUIContent("Dropoff"));
             EditorGUILayout.Slider(voronoiMinHeight, 0, 1f, new GUIContent("Min Height"));
             EditorGUILayout.Slider(voronoiMaxHeight, 0, 1f, new GUIContent("Max Height"));
+
+            EditorGUILayout.Space();
+            GUILayout.Label("Voronoi Realistic Section", EditorStyles.boldLabel);
+            EditorGUILayout.Slider(voronoiRoughness, 0, 1f, new GUIContent("Roughness"));
+            EditorGUILayout.Slider(voronoiSharpness, 0, 1f, new GUIContent("Sharpness"));
+            EditorGUILayout.Slider(voronoiPlateau, 0, 1f, new GUIContent("Plateau"));
             EditorGUILayout.Space();
         }
     }
@@ -45,10 +57,14 @@ public class VoronoiTerrainEditor : BaseTerrainEditor
     {
         VoronoiTerrain terrain = (VoronoiTerrain)target;
 
-EditorGUILayout.Space();
         if (GUILayout.Button("Generate Terrain + Multiple Peaks"))
         {
             terrain.GenerateVoronoiPeakTerrain();
+        }
+        EditorGUILayout.Space();
+        if (GUILayout.Button("Generate Terrain + Realistic"))
+        {
+            terrain.GenerateVoronoiRealisticTerrain();
         }
         EditorGUILayout.Space();
     }
