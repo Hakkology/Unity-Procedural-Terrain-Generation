@@ -12,7 +12,8 @@ public class VoronoiTerrain : BaseTerrain
     public float voronoiRoughness = 0.05f;
     public float voronoiSharpness = 6;
     public float voronoiPlateau = 0.02f;
-    
+    public PerlinParameters perlinParameters = new();
+
 
     public override void GenerateTerrain()
     {
@@ -84,7 +85,7 @@ public class VoronoiTerrain : BaseTerrain
         terrainData.SetHeights(0, 0, heightMap);
         // Debug.Log(string.Format("{0} {1} {2} {3} {4}", voronoiPeakCount, voronoiMinHeight, voronoiMaxHeight, voronoiDropoff, voronoiFalloff));
     }
-    
+
     public void GenerateVoronoiRealisticTerrain()
     {
         float[,] heightMap = GetHeightMap();
@@ -129,5 +130,52 @@ public class VoronoiTerrain : BaseTerrain
         }
 
         terrainData.SetHeights(0, 0, heightMap);
+    }
+
+    public void GenerateVoronoiPerlinTerrain()
+    {
+        float[,] heightMap = GetHeightMap();
+        
+
+        for (int p = 0; p < voronoiPeakCount; p++)
+        {
+            Vector3 peak = new Vector3(
+                Random.Range(0, heightMapRes),
+                Random.Range(voronoiMinHeight, voronoiMaxHeight),
+                Random.Range(0, heightMapRes));
+
+            if (heightMap[(int)peak.x, (int)peak.z] < peak.y)
+                heightMap[(int)peak.x, (int)peak.z] = peak.y;
+            else
+                continue;
+
+            Vector2 peakLocation = new Vector2(peak.x, peak.z);
+            float maxDistance = Vector2.Distance(new Vector2(0.0f, 0.0f), new Vector2(heightMapRes, heightMapRes));
+
+            for (int y = 0; y < heightMapRes; y++)
+            {
+                for (int x = 0; x < heightMapRes; x++)
+                {
+                    if (!(x == peak.x && y == peak.z))
+                    {
+                        float distanceToPeak = Vector2.Distance(peakLocation, new Vector2(x, y)) / maxDistance;
+                        float h = peak.y - distanceToPeak * voronoiFalloff - Mathf.Pow(distanceToPeak, voronoiDropoff);
+
+                        h = peak.y - distanceToPeak * voronoiFalloff +
+                        Utils.FractalBrownianMotion((x + perlinParameters.mPerlinXOffset) * perlinParameters.mPerlinXScale,
+                                                    (y + perlinParameters.mPerlinYOffset) * perlinParameters.mPerlinYScale,
+                                                    perlinParameters.mPerlinOctaves,
+                                                    perlinParameters.mPerlinPersistance) * perlinParameters.mPerlinHeightScale; ;
+
+                        if (heightMap[x, y] < h)
+                        {
+                            heightMap[x, y] = h;
+                        }
+                    }
+
+
+                }
+            }
+        }
     }
 }

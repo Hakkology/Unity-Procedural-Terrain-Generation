@@ -12,7 +12,9 @@ public class VoronoiTerrainEditor : BaseTerrainEditor
     SerializedProperty voronoiRoughness;
     SerializedProperty voronoiSharpness;
     SerializedProperty voronoiPlateau;
+    SerializedProperty perlinParameters;
     bool showVoronoiSection = true;
+    bool showPerlinSection = false;
 
     protected override void OnEnable()
     {
@@ -25,6 +27,7 @@ public class VoronoiTerrainEditor : BaseTerrainEditor
         voronoiRoughness = serializedObject.FindProperty("voronoiRoughness");
         voronoiSharpness = serializedObject.FindProperty("voronoiSharpness");
         voronoiPlateau = serializedObject.FindProperty("voronoiPlateau");
+        perlinParameters = serializedObject.FindProperty("perlinParameters");
     }
 
     protected override void DrawTerrainParameters()
@@ -51,6 +54,12 @@ public class VoronoiTerrainEditor : BaseTerrainEditor
             EditorGUILayout.Slider(voronoiPlateau, 0, 1f, new GUIContent("Plateau"));
             EditorGUILayout.Space();
         }
+
+        showPerlinSection = EditorGUILayout.Foldout(showPerlinSection, "Additional Perlin Terrain Settings");
+        if (showPerlinSection)
+        {
+            
+        }
     }
 
     protected override void DrawAdditionalButtons()
@@ -65,6 +74,11 @@ public class VoronoiTerrainEditor : BaseTerrainEditor
         if (GUILayout.Button("Generate Terrain + Realistic"))
         {
             terrain.GenerateVoronoiRealisticTerrain();
+        }
+        EditorGUILayout.Space();
+        if (GUILayout.Button("Generate Terrain + Perlin"))
+        {
+            terrain.GenerateVoronoiPerlinTerrain();
         }
         EditorGUILayout.Space();
     }
