@@ -58,7 +58,11 @@ public class VoronoiTerrainEditor : BaseTerrainEditor
         showPerlinSection = EditorGUILayout.Foldout(showPerlinSection, "Additional Perlin Terrain Settings");
         if (showPerlinSection)
         {
-            
+            EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+            GUILayout.Label("Perlin Section", EditorStyles.boldLabel);
+            EditorGUILayout.Space();
+
+            EditorGUILayout.PropertyField(perlinParameters, new GUIContent("Perlin Settings"), true);
         }
     }
 

@@ -135,7 +135,7 @@ public class VoronoiTerrain : BaseTerrain
     public void GenerateVoronoiPerlinTerrain()
     {
         float[,] heightMap = GetHeightMap();
-        
+
 
         for (int p = 0; p < voronoiPeakCount; p++)
         {
@@ -177,5 +177,7 @@ public class VoronoiTerrain : BaseTerrain
                 }
             }
         }
+        
+        terrainData.SetHeights(0, 0, heightMap);
     }
 }
