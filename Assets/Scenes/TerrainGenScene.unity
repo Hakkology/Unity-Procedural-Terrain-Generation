@@ -551,14 +551,23 @@ MonoBehaviour:
   terrain: {fileID: 470084382}
   terrainData: {fileID: 15600000, guid: 8d1662e69504cd196b4cbe6612c7b871, type: 2}
   resetTerrain: 1
-  voronoiPeakCount: 2
-  voronoiFalloff: 2.39
-  voronoiDropoff: 2.21
-  voronoiMinHeight: 0.752
-  voronoiMaxHeight: 0.412
+  voronoiPeakCount: 6
+  voronoiFalloff: 4.42
+  voronoiDropoff: 4.26
+  voronoiMinHeight: 0.498
+  voronoiMaxHeight: 0.932
   voronoiRoughness: 0.05
   voronoiSharpness: 6
   voronoiPlateau: 0.02
+  perlinParameters:
+    mPerlinXScale: 0.01
+    mPerlinYScale: 0.01
+    mPerlinXOffset: 0
+    mPerlinYOffset: 0
+    mPerlinOctaves: 3
+    mPerlinPersistance: 8
+    mPerlinHeightScale: 0.09
+    remove: 0
 --- !u!4 &1666235873
 Transform:
   m_ObjectHideFlags: 0
