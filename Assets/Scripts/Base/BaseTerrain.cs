@@ -62,6 +62,11 @@ public class BaseTerrain : MonoBehaviour, IGeneratable
         terrainData.SetHeights(0, 0, heightMap);
     }
     
+    /// <summary>
+    /// base is empty.
+    /// </summary> <summary>
+    /// 
+    /// </summary>
     public virtual void GenerateTerrain()
     {
         Debug.LogWarning($"{this.GetType().Name} has not implemented GenerateTerrain()");
