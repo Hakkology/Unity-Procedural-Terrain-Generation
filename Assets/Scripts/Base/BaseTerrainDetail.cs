@@ -193,7 +193,17 @@ public class BaseTerrainDetail : MonoBehaviour, ITexturable, IVegetative
 
     public void ApplyVegetation()
     {
-        throw new System.NotImplementedException();
+        TreePrototype[] newTreePrototypes;
+        newTreePrototypes = new TreePrototype[vegetationProperties.Count];
+        int tIndex = 0;
+
+        foreach (VegetationProperties t in vegetationProperties)
+        {
+            newTreePrototypes[tIndex] = new TreePrototype();
+            newTreePrototypes[tIndex].prefab = t.prefab; // it wants mesh but defined as prefab ? Confusing.
+            tIndex++;
+        }
+        terrainData.treePrototypes = newTreePrototypes;
     }
 
     void NormalizeVector(ref float[] v)
