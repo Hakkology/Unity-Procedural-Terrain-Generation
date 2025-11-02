@@ -73,22 +73,35 @@ public class BaseTerrain : MonoBehaviour, IGeneratable
         }
 
         float[,] heightMap = GetHeightMap();
-        for (int i = 0; i < smoothCount; i++)
-        {
-            for (int y = 0; y < heightMapRes; y++)
-            {
-                for (int x = 0; x < heightMapRes; x++)
-                {
-                    float avgHeight = heightMap[x, y];
-                    List<Vector2> neighbours = GenerateNeighbours(new Vector2(x, y), heightMapRes, heightMapRes);
+        int totalIterations = smoothCount;
 
-                    foreach (Vector2 n in neighbours)
-                        avgHeight += heightMap[(int)n.x, (int)n.y];
-                    
-                    heightMap[x, y] = avgHeight / ((float)neighbours.Count + 1);
+        try
+        {
+            for (int i = 0; i < totalIterations; i++)
+            {
+                for (int y = 0; y < heightMapRes; y++)
+                {
+                    for (int x = 0; x < heightMapRes; x++)
+                    {
+                        float avgHeight = heightMap[x, y];
+                        List<Vector2> neighbours = GenerateNeighbours(new Vector2(x, y), heightMapRes, heightMapRes);
+
+                        foreach (Vector2 n in neighbours)
+                            avgHeight += heightMap[(int)n.x, (int)n.y];
+
+                        heightMap[x, y] = avgHeight / ((float)neighbours.Count + 1);
+                    }
+
+                    float progress = ((i * heightMapRes) + y) / (float)(totalIterations * heightMapRes);
+                    EditorUtility.DisplayProgressBar("Smoothing Terrain...", $"Iteration {i + 1}/{totalIterations}", progress);
                 }
             }
         }
+        finally
+        {
+            EditorUtility.ClearProgressBar();
+        }
+
         terrainData.SetHeights(0, 0, heightMap);
     }
 
