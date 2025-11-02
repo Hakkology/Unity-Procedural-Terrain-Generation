@@ -53,8 +53,6 @@ public class BaseTerrainDetailEditor : Editor
     protected virtual void DrawTerrainTextureParameters()
     {
         ITexturable terrain = (ITexturable)target;
-        EditorGUILayout.Space();
-
         showSplatMaps = EditorGUILayout.Foldout(showSplatMaps, "Splat Maps");
         if (showSplatMaps)
         {
@@ -80,8 +78,6 @@ public class BaseTerrainDetailEditor : Editor
     public void DrawTerrainVegetationParameters()
     {
         IVegetative terrain = (IVegetative)target;
-        EditorGUILayout.Space();
-
         showVegetation = EditorGUILayout.Foldout(showVegetation, "Vegetation");
         if (showVegetation)
         {
@@ -89,7 +85,7 @@ public class BaseTerrainDetailEditor : Editor
             GUILayout.Label("Vegetation Properties", EditorStyles.boldLabel);
 
             EditorGUILayout.IntSlider(maxTrees, 0, 10000, new GUIContent("Max Trees"));
-            EditorGUILayout.Slider(treeSpacing, 0f, 50f, new GUIContent("Tree Spacing"));
+            EditorGUILayout.IntSlider(treeSpacing, 1, 50, new GUIContent("Tree Spacing"));
             EditorGUILayout.Space();
         
             vegetationTable = GUITableLayout.DrawTable(vegetationTable, serializedObject.FindProperty("vegetationProperties"));

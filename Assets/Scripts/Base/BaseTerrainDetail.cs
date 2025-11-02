@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEditor;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class BaseTerrainDetail : MonoBehaviour, ITexturable, IVegetative
 {
@@ -12,7 +13,7 @@ public class BaseTerrainDetail : MonoBehaviour, ITexturable, IVegetative
     public TerrainData terrainData;
     
     public int maxTrees;
-    public float treeSpacing;
+    public int treeSpacing;
 
     public List<SplatHeights> splatHeights = new List<SplatHeights>()
     {
@@ -204,6 +205,30 @@ public class BaseTerrainDetail : MonoBehaviour, ITexturable, IVegetative
             tIndex++;
         }
         terrainData.treePrototypes = newTreePrototypes;
+
+        List<TreeInstance> allVegetation = new List<TreeInstance>();
+
+        for (int z = 0; z < terrainData.alphamapHeight; z += treeSpacing)
+        {
+            for (int x = 0; x < terrainData.alphamapWidth; x += treeSpacing)
+            {
+                for (int tp = 0; tp < terrainData.treePrototypes.Length; ++tp)
+                {
+                    float thisHeight = terrainData.GetHeight(x, z) / terrainData.size.y;
+                    TreeInstance instance = new TreeInstance();
+                    instance.position = new Vector3(
+                        (x + Random.Range(-5f, 5f)) / terrainData.alphamapWidth,
+                        thisHeight,
+                        (z + Random.Range(-5f, 5f)) / terrainData.alphamapHeight);
+                        
+                    allVegetation.Add(instance);
+                    if (allVegetation.Count >= maxTrees) goto TREESDONE;
+                }
+            }
+        }
+
+    TREESDONE:
+        terrainData.treeInstances = allVegetation.ToArray();
     }
 
     void NormalizeVector(ref float[] v)
