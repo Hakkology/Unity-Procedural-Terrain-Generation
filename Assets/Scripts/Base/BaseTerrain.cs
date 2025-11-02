@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
@@ -16,6 +17,7 @@ public class BaseTerrain : MonoBehaviour, IGeneratable
     public Terrain terrain;  
     public TerrainData terrainData;
     public bool resetTerrain = true;
+    public int smoothCount = 1;
 
     void OnEnable()
     {
@@ -60,6 +62,56 @@ public class BaseTerrain : MonoBehaviour, IGeneratable
     {
         float[,] heightMap = new float[heightMapRes, heightMapRes];
         terrainData.SetHeights(0, 0, heightMap);
+    }
+
+    public void SmoothTerrain()
+    {
+        if (resetTerrain)
+        {
+            Debug.Log("Can't smooth with reset.");
+            return;
+        }
+
+        float[,] heightMap = GetHeightMap();
+        for (int i = 0; i < smoothCount; i++)
+        {
+            for (int y = 0; y < heightMapRes; y++)
+            {
+                for (int x = 0; x < heightMapRes; x++)
+                {
+                    float avgHeight = heightMap[x, y];
+                    List<Vector2> neighbours = GenerateNeighbours(new Vector2(x, y), heightMapRes, heightMapRes);
+
+                    foreach (Vector2 n in neighbours)
+                        avgHeight += heightMap[(int)n.x, (int)n.y];
+                    
+                    heightMap[x, y] = avgHeight / ((float)neighbours.Count + 1);
+                }
+            }
+        }
+        terrainData.SetHeights(0, 0, heightMap);
+    }
+
+    List<Vector2> GenerateNeighbours(Vector2 pos, int width, int height) {
+
+        List<Vector2> neighbours = new List<Vector2>();
+
+        for (int y = -1; y < 2; ++y) { // between -1 and 1.
+
+            for (int x = -1; x < 2; ++x) {
+
+                if (!(x == 0 && y == 0)) {
+
+                    Vector2 nPos = new Vector2(
+                        Mathf.Clamp(pos.x + x, 0.0f, width - 1),
+                        Mathf.Clamp(pos.y + y, 0.0f, height - 1));
+
+                    if (!neighbours.Contains(nPos))
+                        neighbours.Add(nPos);
+                }
+            }
+        }
+        return neighbours;
     }
     
     /// <summary>

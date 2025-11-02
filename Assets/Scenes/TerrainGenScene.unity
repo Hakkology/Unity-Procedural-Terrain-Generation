@@ -550,7 +550,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   terrain: {fileID: 470084382}
   terrainData: {fileID: 15600000, guid: 8d1662e69504cd196b4cbe6612c7b871, type: 2}
-  resetTerrain: 1
+  resetTerrain: 0
+  smoothCount: 6
+  MPDHeightMin: -2
+  MPDHeightMax: 2
+  MPDHeightDampner: 2
+  MPDRoughness: 3.3
 --- !u!4 &1212421891
 Transform:
   m_ObjectHideFlags: 0
@@ -598,6 +603,7 @@ MonoBehaviour:
   terrain: {fileID: 470084382}
   terrainData: {fileID: 15600000, guid: 8d1662e69504cd196b4cbe6612c7b871, type: 2}
   resetTerrain: 1
+  smoothCount: 1
   voronoiPeakCount: 6
   voronoiFalloff: 4.42
   voronoiDropoff: 4.26
@@ -677,6 +683,7 @@ MonoBehaviour:
   terrain: {fileID: 470084382}
   terrainData: {fileID: 15600000, guid: 8d1662e69504cd196b4cbe6612c7b871, type: 2}
   resetTerrain: 1
+  smoothCount: 1
   heightMapImage: {fileID: 2800000, guid: 14eae93b8dbd80b4da8e1c4e39689fc6, type: 3}
   heightMapScale: {x: 1, y: 1, z: 1}
 --- !u!1 &1805862778
@@ -711,6 +718,7 @@ MonoBehaviour:
   terrain: {fileID: 470084382}
   terrainData: {fileID: 15600000, guid: 8d1662e69504cd196b4cbe6612c7b871, type: 2}
   resetTerrain: 0
+  smoothCount: 1
   perlinXScale: 0.02
   perlinYScale: 0.02
   perlinXOffset: 0
@@ -791,6 +799,7 @@ MonoBehaviour:
   terrain: {fileID: 470084382}
   terrainData: {fileID: 15600000, guid: 8d1662e69504cd196b4cbe6612c7b871, type: 2}
   resetTerrain: 1
+  smoothCount: 1
   randomHeightRange: {x: 0, y: 0.1}
 --- !u!4 &2037812415
 Transform:

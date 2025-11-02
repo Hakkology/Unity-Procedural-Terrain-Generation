@@ -7,6 +7,7 @@ public class BaseTerrainEditor : Editor
     protected SerializedProperty terrainProp;
     protected SerializedProperty terrainDataProp;
     protected SerializedProperty resetTerrain;
+    protected SerializedProperty smoothCount;
 
     bool showCommonParameters = true;
 
@@ -15,6 +16,7 @@ public class BaseTerrainEditor : Editor
         terrainProp = serializedObject.FindProperty("terrain");
         terrainDataProp = serializedObject.FindProperty("terrainData");
         resetTerrain = serializedObject.FindProperty("resetTerrain");
+        smoothCount = serializedObject.FindProperty("smoothCount");
     }
 
     public override void OnInspectorGUI()
@@ -38,6 +40,12 @@ public class BaseTerrainEditor : Editor
         EditorGUILayout.Space();
         DrawAdditionalButtons();
 
+        if (GUILayout.Button("Smooth Terrain"))
+        {
+            terrain.SmoothTerrain();
+        }
+
+        EditorGUILayout.Space();
         if (GUILayout.Button("Reset Terrain"))
         {
             terrain.ResetTerrain();
@@ -58,6 +66,7 @@ public class BaseTerrainEditor : Editor
         if (showCommonParameters)
         {
             EditorGUILayout.PropertyField(resetTerrain);
+            EditorGUILayout.IntSlider(smoothCount, 1, 10, new GUIContent("Smooth Iterations"));
         }
 
         EditorGUILayout.Space();
