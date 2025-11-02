@@ -421,9 +421,9 @@ GameObject:
   - component: {fileID: 470084383}
   - component: {fileID: 470084382}
   - component: {fileID: 470084381}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Terrain
-  m_TagString: Untagged
+  m_TagString: Terrain
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -747,6 +747,14 @@ MonoBehaviour:
     maxHeight: 0.2
     minSlope: 0
     maxSlope: 90
+    minScale: 0.5
+    maxScale: 1
+    minRotation: 0
+    maxRotation: 360
+    density: 0.5
+    colour1: {r: 1, g: 1, b: 1, a: 1}
+    colour2: {r: 1, g: 1, b: 1, a: 1}
+    lightColour: {r: 1, g: 1, b: 1, a: 1}
     remove: 0
 --- !u!1 &1515026558
 GameObject:
@@ -843,6 +851,14 @@ MonoBehaviour:
     maxHeight: 0.2
     minSlope: 0
     maxSlope: 90
+    minScale: 0.5
+    maxScale: 1
+    minRotation: 0
+    maxRotation: 360
+    density: 0.5
+    colour1: {r: 1, g: 1, b: 1, a: 1}
+    colour2: {r: 1, g: 1, b: 1, a: 1}
+    lightColour: {r: 1, g: 1, b: 1, a: 1}
     remove: 0
   - prefab: {fileID: 6060788920606015911, guid: e730e362773695e408e48f59e6dff87a,
       type: 3}
@@ -850,6 +866,14 @@ MonoBehaviour:
     maxHeight: 0.2
     minSlope: 0
     maxSlope: 90
+    minScale: 0.5
+    maxScale: 1
+    minRotation: 0
+    maxRotation: 360
+    density: 0.5
+    colour1: {r: 1, g: 1, b: 1, a: 1}
+    colour2: {r: 1, g: 1, b: 1, a: 1}
+    lightColour: {r: 1, g: 1, b: 1, a: 1}
     remove: 0
 --- !u!1 &1666235871
 GameObject:

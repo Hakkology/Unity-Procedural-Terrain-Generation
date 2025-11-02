@@ -214,13 +214,21 @@ public class BaseTerrainDetail : MonoBehaviour, ITexturable, IVegetative
             {
                 for (int tp = 0; tp < terrainData.treePrototypes.Length; ++tp)
                 {
+                    float thisScale = Random.Range(vegetationProperties[tp].minScale, vegetationProperties[tp].maxScale);
                     float thisHeight = terrainData.GetHeight(x, z) / terrainData.size.y;
                     TreeInstance instance = new TreeInstance();
+
+                    instance.rotation = Random.Range(vegetationProperties[tp].minRotation, vegetationProperties[tp].maxRotation);
+                    instance.widthScale = thisScale;
+                    instance.heightScale = thisScale;
+                    instance.prototypeIndex = tp;
+                    instance.color = Color.Lerp(vegetationProperties[tp].colour1, vegetationProperties[tp].colour2, Random.value);
+                    instance.lightmapColor = vegetationProperties[tp].lightColour;
                     instance.position = new Vector3(
                         (x + Random.Range(-5f, 5f)) / terrainData.alphamapWidth,
                         thisHeight,
                         (z + Random.Range(-5f, 5f)) / terrainData.alphamapHeight);
-                        
+
                     allVegetation.Add(instance);
                     if (allVegetation.Count >= maxTrees) goto TREESDONE;
                 }
