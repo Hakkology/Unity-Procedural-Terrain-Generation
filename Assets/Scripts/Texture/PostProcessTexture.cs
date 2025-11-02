@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PostProcessTexture : BaseTerrainTexture 
+public class PostProcessTexture : BaseTerrainDetail 
 {
     protected override void DefineAdditionalTextureBehaviour()
     {

@@ -3,16 +3,25 @@ using Unity.Mathematics;
 using UnityEditor;
 using UnityEngine;
 
-public class BaseTerrainTexture : MonoBehaviour, ITexturable
+public class BaseTerrainDetail : MonoBehaviour, ITexturable, IVegetative
 {
     protected int heightMapRes => terrainData.heightmapResolution;
     protected float[,] GetHeights() => terrainData.GetHeights(0, 0, heightMapRes, heightMapRes);
 
-    public Terrain terrain;  
+    public Terrain terrain;
     public TerrainData terrainData;
+    
+    public int maxTrees;
+    public float treeSpacing;
+
     public List<SplatHeights> splatHeights = new List<SplatHeights>()
     {
         new SplatHeights()
+    };
+
+    public List<VegetationProperties> vegetationProperties = new List<VegetationProperties>()
+    {
+        new VegetationProperties() 
     };
 
     void OnEnable()
@@ -144,7 +153,7 @@ public class BaseTerrainTexture : MonoBehaviour, ITexturable
 
         int width = terrainData.alphamapWidth;
         int height = terrainData.alphamapHeight;
-        int layers = Mathf.Max(1, terrainData.alphamapLayers); 
+        int layers = Mathf.Max(1, terrainData.alphamapLayers);
 
         float[,,] emptySplat = new float[width, height, layers];
         for (int y = 0; y < height; y++)
@@ -155,6 +164,36 @@ public class BaseTerrainTexture : MonoBehaviour, ITexturable
         terrainData.SetAlphamaps(0, 0, emptySplat);
 
         Debug.Log("Terrain splatmaps cleared. All layers removed from terrainData.");
+    }
+    
+    public void AddVegetation()
+    {
+        vegetationProperties.Add(new VegetationProperties());
+    }
+
+    public void RemoveVegetation()
+    {
+        List<VegetationProperties> keepVegetationProps = new List<VegetationProperties>();
+
+        for (int i = 0; i < vegetationProperties.Count; i++)
+        {
+            if (!vegetationProperties[i].remove)
+            {
+                keepVegetationProps.Add(vegetationProperties[i]);
+            }
+        }
+
+        if (keepVegetationProps.Count == 0)
+        {
+            keepVegetationProps.Add(vegetationProperties[0]);
+        }
+
+        vegetationProperties = keepVegetationProps;
+    }
+
+    public void ApplyVegetation()
+    {
+        throw new System.NotImplementedException();
     }
 
     void NormalizeVector(ref float[] v)
