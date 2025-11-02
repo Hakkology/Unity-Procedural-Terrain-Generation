@@ -48,6 +48,7 @@ public class BaseTerrainTextureEditor : Editor
 
             GUILayout.Space(20);
 
+            EditorGUILayout.Space();
             EditorGUILayout.BeginHorizontal();
 
             if (GUILayout.Button("+"))
@@ -61,10 +62,16 @@ public class BaseTerrainTextureEditor : Editor
             }
 
             EditorGUILayout.EndHorizontal();
-
+            EditorGUILayout.Space();
             if (GUILayout.Button("Apply Splatmaps"))
             {
                 terrain.SplatMaps();
+            }
+
+            EditorGUILayout.Space();
+            if (GUILayout.Button("Reset Splatmaps"))
+            {
+                terrain.ResetAllTerrainLayers();
             }
         }
     }

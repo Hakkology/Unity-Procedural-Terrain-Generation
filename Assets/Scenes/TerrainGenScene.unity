@@ -152,6 +152,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1515026559}
+  - {fileID: 1413514968}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &330585543
@@ -621,9 +622,9 @@ MonoBehaviour:
   resetTerrain: 0
   smoothCount: 7
   MPDHeightMin: -2
-  MPDHeightMax: 3.38
+  MPDHeightMax: 2.29
   MPDHeightDampner: 2
-  MPDRoughness: 3.3
+  MPDRoughness: 1.88
 --- !u!4 &1212421891
 Transform:
   m_ObjectHideFlags: 0
@@ -639,6 +640,105 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1168357609}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1413514967
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1413514968}
+  - component: {fileID: 1413514969}
+  m_Layer: 0
+  m_Name: PostProcessedTerrainTexture
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1413514968
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1413514967}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 249173213}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1413514969
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1413514967}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b72d1ce08914f0578763630eac89128, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  terrain: {fileID: 470084382}
+  terrainData: {fileID: 15600000, guid: 8d1662e69504cd196b4cbe6612c7b871, type: 2}
+  splatHeights:
+  - texture: {fileID: 2800000, guid: dd49ed99f55924d13bacefd240626bc5, type: 3}
+    textureNormalMap: {fileID: 0}
+    minHeight: 0
+    maxHeight: 0.2
+    minSlope: 0
+    maxSlope: 90
+    splatOffset: 0.1
+    splatNoiseXScale: 0.01
+    splatNoiseYScale: 0.01
+    splatNoiseZScale: 0.1
+    tileOffset: {x: 0, y: 0}
+    tileSize: {x: 50, y: 40}
+    remove: 0
+  - texture: {fileID: 2800000, guid: 69930cb68b9e44a93877a4fd343b0e89, type: 3}
+    textureNormalMap: {fileID: 0}
+    minHeight: 0.2
+    maxHeight: 0.6
+    minSlope: 0
+    maxSlope: 90
+    splatOffset: 0.1
+    splatNoiseXScale: 0.01
+    splatNoiseYScale: 0.01
+    splatNoiseZScale: 0.1
+    tileOffset: {x: 0, y: 0}
+    tileSize: {x: 50, y: 40}
+    remove: 0
+  - texture: {fileID: 2800000, guid: c12fba8bcc2ef4b959d67f60ca59d886, type: 3}
+    textureNormalMap: {fileID: 0}
+    minHeight: 0.6
+    maxHeight: 1
+    minSlope: 0
+    maxSlope: 90
+    splatOffset: 0.1
+    splatNoiseXScale: 0.01
+    splatNoiseYScale: 0.01
+    splatNoiseZScale: 0.1
+    tileOffset: {x: 0, y: 0}
+    tileSize: {x: 50, y: 40}
+    remove: 0
+  - texture: {fileID: 2800000, guid: de70d1ae446e84ee5aa2ea6a420781e8, type: 3}
+    textureNormalMap: {fileID: 0}
+    minHeight: 0
+    maxHeight: 1
+    minSlope: 70
+    maxSlope: 90
+    splatOffset: 0.1
+    splatNoiseXScale: 0.01
+    splatNoiseYScale: 0.01
+    splatNoiseZScale: 0.1
+    tileOffset: {x: 0, y: 0}
+    tileSize: {x: 50, y: 40}
+    remove: 0
 --- !u!1 &1515026558
 GameObject:
   m_ObjectHideFlags: 0
@@ -650,7 +750,7 @@ GameObject:
   - component: {fileID: 1515026559}
   - component: {fileID: 1515026560}
   m_Layer: 0
-  m_Name: SplatTexture
+  m_Name: TerrainTexture
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -680,19 +780,50 @@ MonoBehaviour:
   m_GameObject: {fileID: 1515026558}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3fd220075fc60233bbbf97e0caa82f1a, type: 3}
+  m_Script: {fileID: 11500000, guid: 0376d01f44baefa2d896d0e285154585, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   terrain: {fileID: 470084382}
   terrainData: {fileID: 15600000, guid: 8d1662e69504cd196b4cbe6612c7b871, type: 2}
   splatHeights:
-  - texture: {fileID: 2800000, guid: dd49ed99f55924d13bacefd240626bc5, type: 3}
-    minHeight: 0.1
+  - texture: {fileID: 2800000, guid: d44cec25420524046b0137655ed7f307, type: 3}
+    textureNormalMap: {fileID: 2800000, guid: f8c9bb189b5f4d344bc5193ab9446783, type: 3}
+    minHeight: 0
     maxHeight: 0.2
+    minSlope: 0
+    maxSlope: 90
+    splatOffset: 0.1
+    splatNoiseXScale: 0.01
+    splatNoiseYScale: 0.01
+    splatNoiseZScale: 0.1
+    tileOffset: {x: 0, y: 0}
+    tileSize: {x: 50, y: 40}
     remove: 0
-  - texture: {fileID: 2800000, guid: 5ab22b13873ff4767bf281a8c183615a, type: 3}
-    minHeight: 0.1
-    maxHeight: 0.2
+  - texture: {fileID: 2800000, guid: 1be3013bed1856b4da24006709df06fb, type: 3}
+    textureNormalMap: {fileID: 2800000, guid: 0333fad25ec40c044b5a72bd4bb1f844, type: 3}
+    minHeight: 0.2
+    maxHeight: 1
+    minSlope: 0
+    maxSlope: 90
+    splatOffset: 0.1
+    splatNoiseXScale: 0.01
+    splatNoiseYScale: 0.01
+    splatNoiseZScale: 0.1
+    tileOffset: {x: 0, y: 0}
+    tileSize: {x: 50, y: 40}
+    remove: 0
+  - texture: {fileID: 2800000, guid: de70d1ae446e84ee5aa2ea6a420781e8, type: 3}
+    textureNormalMap: {fileID: 0}
+    minHeight: 0.6
+    maxHeight: 1
+    minSlope: 65
+    maxSlope: 90
+    splatOffset: 0.1
+    splatNoiseXScale: 0.01
+    splatNoiseYScale: 0.01
+    splatNoiseZScale: 0.1
+    tileOffset: {x: 0, y: 0}
+    tileSize: {x: 50, y: 40}
     remove: 0
 --- !u!1 &1666235871
 GameObject:

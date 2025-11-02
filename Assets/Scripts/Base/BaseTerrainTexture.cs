@@ -32,7 +32,10 @@ public class BaseTerrainTexture : MonoBehaviour, ITexturable
         {
             newSplatPrototypes[spIndex] = new TerrainLayer();
             newSplatPrototypes[spIndex].diffuseTexture = sh.texture;
+            newSplatPrototypes[spIndex].normalMapTexture = sh.textureNormalMap;
             newSplatPrototypes[spIndex].diffuseTexture.Apply(true);
+            newSplatPrototypes[spIndex].tileOffset = sh.tileOffset;
+            newSplatPrototypes[spIndex].tileSize = sh.tileSize;
             string path = "Assets/New TerrainLayer " + spIndex + ".terrainLayer";
             AssetDatabase.CreateAsset(newSplatPrototypes[spIndex], path);
 
@@ -62,13 +65,20 @@ public class BaseTerrainTexture : MonoBehaviour, ITexturable
                     int hmx = x * ((heightMapRes - 1) / terrainData.alphamapWidth);
                     int hmy = y * ((heightMapRes - 1) / terrainData.alphamapHeight);
 
-                    if (heightMap[hmx, hmy] >= thisHeightStart && heightMap[hmx, hmy] <= thisHeightStop)
+                    float normX = x * 1.0f / (terrainData.alphamapWidth - 1);
+                    float normY = y * 1.0f / (terrainData.alphamapHeight - 1);
+
+                    var steepness = terrainData.GetSteepness(normX, normY);
+
+                    // where textures should go.
+                    if (heightMap[hmx, hmy] >= thisHeightStart && heightMap[hmx, hmy] <= thisHeightStop &&
+                        steepness >= splatHeights[i].minSlope && steepness <= splatHeights[i].maxSlope)
                     {
                         if (heightMap[hmx, hmy] <= splatHeights[i].minHeight)
-                            splat[i] = 1- Mathf.Abs(heightMap[hmx, hmy] - splatHeights[i].minHeight) / offset;
+                            splat[i] = 1 - Mathf.Abs(heightMap[hmx, hmy] - splatHeights[i].minHeight) / offset;
                         else if (heightMap[hmx, hmy] >= splatHeights[i].maxHeight)
-                            splat[i] = 1- Mathf.Abs(heightMap[hmx, hmy] - splatHeights[i].maxHeight) / offset;
-                        else  splat[i] = 1;
+                            splat[i] = 1 - Mathf.Abs(heightMap[hmx, hmy] - splatHeights[i].maxHeight) / offset;
+                        else splat[i] = 1;
                     }
                 }
 
@@ -81,6 +91,7 @@ public class BaseTerrainTexture : MonoBehaviour, ITexturable
             }
         }
 
+        DefineAdditionalTextureBehaviour();
         terrainData.SetAlphamaps(0, 0, splatMapData);
     }
 
@@ -108,6 +119,34 @@ public class BaseTerrainTexture : MonoBehaviour, ITexturable
 
         splatHeights = keepSplatHeights;
     }
+
+    public void ResetAllTerrainLayers()
+    {
+        if (terrainData == null)
+        {
+            Debug.LogWarning("No TerrainData assigned.");
+            return;
+        }
+
+        // 1. TerrainData üzerindeki terrainLayers’ı sıfırla
+        terrainData.terrainLayers = new TerrainLayer[0];
+
+        // 2. Splat/Alphamap verisini sıfırla (tüm yüzey beyaz = hiçbir doku yok)
+        int width = terrainData.alphamapWidth;
+        int height = terrainData.alphamapHeight;
+        int layers = Mathf.Max(1, terrainData.alphamapLayers); // 0 olmasın
+
+        float[,,] emptySplat = new float[width, height, layers];
+        for (int y = 0; y < height; y++)
+            for (int x = 0; x < width; x++)
+                for (int l = 0; l < layers; l++)
+                    emptySplat[x, y, l] = (l == 0) ? 1f : 0f; // ilk layer tam dolu, diğerleri 0
+
+        terrainData.SetAlphamaps(0, 0, emptySplat);
+
+        Debug.Log("Terrain splatmaps cleared. All layers removed from terrainData.");
+    }
+
     void NormalizeVector(ref float[] v)
     {
         float total = 0.0f;
