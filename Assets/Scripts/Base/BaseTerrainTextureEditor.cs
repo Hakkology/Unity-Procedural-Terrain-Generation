@@ -67,8 +67,6 @@ public class BaseTerrainTextureEditor : Editor
                 terrain.SplatMaps();
             }
         }
-
-        EditorGUILayout.Space();
     }
     
     protected virtual void DrawAdditionalButtons() { }
