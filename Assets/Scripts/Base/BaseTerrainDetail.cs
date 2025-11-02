@@ -207,6 +207,7 @@ public class BaseTerrainDetail : MonoBehaviour, ITexturable, IVegetative
         terrainData.treePrototypes = newTreePrototypes;
 
         List<TreeInstance> allVegetation = new List<TreeInstance>();
+        int layerMask = 1 << LayerMask.NameToLayer("Terrain");
 
         for (int z = 0; z < terrainData.alphamapHeight; z += treeSpacing)
         {
@@ -214,23 +215,48 @@ public class BaseTerrainDetail : MonoBehaviour, ITexturable, IVegetative
             {
                 for (int tp = 0; tp < terrainData.treePrototypes.Length; ++tp)
                 {
+                    if (Random.value > vegetationProperties[tp].density) break;
+
                     float thisScale = Random.Range(vegetationProperties[tp].minScale, vegetationProperties[tp].maxScale);
                     float thisHeight = terrainData.GetHeight(x, z) / terrainData.size.y;
-                    TreeInstance instance = new TreeInstance();
+                    float thisHeightStart = vegetationProperties[tp].minHeight;
+                    float thisHeightEnd = vegetationProperties[tp].maxHeight;
 
-                    instance.rotation = Random.Range(vegetationProperties[tp].minRotation, vegetationProperties[tp].maxRotation);
-                    instance.widthScale = thisScale;
-                    instance.heightScale = thisScale;
-                    instance.prototypeIndex = tp;
-                    instance.color = Color.Lerp(vegetationProperties[tp].colour1, vegetationProperties[tp].colour2, Random.value);
-                    instance.lightmapColor = vegetationProperties[tp].lightColour;
-                    instance.position = new Vector3(
-                        (x + Random.Range(-5f, 5f)) / terrainData.alphamapWidth,
-                        thisHeight,
-                        (z + Random.Range(-5f, 5f)) / terrainData.alphamapHeight);
+                    float normX = x * 1.0f / (terrainData.alphamapWidth -1);
+                    float normY = z * 1.0f / (terrainData.alphamapHeight - 1);
+                    float steepness = terrainData.GetSteepness(normX, normY);
 
-                    allVegetation.Add(instance);
-                    if (allVegetation.Count >= maxTrees) goto TREESDONE;
+                    if ((thisHeight >= thisHeightStart && thisHeight <= thisHeightEnd) &&
+                        (steepness >= vegetationProperties[tp].minSlope && steepness <= vegetationProperties[tp].maxSlope))
+                    {
+                        TreeInstance instance = new TreeInstance();
+
+                        instance.position = new Vector3(
+                            (x + Random.Range(-5f, 5f)) / terrainData.alphamapWidth,
+                            thisHeight,
+                            (z + Random.Range(-5f, 5f)) / terrainData.alphamapHeight);
+
+                        Vector3 treeWorldPos = new Vector3(instance.position.x * terrainData.size.x,
+                                                            instance.position.y * terrainData.size.y,
+                                                            instance.position.z * terrainData.size.z) + this.transform.position;
+                        RaycastHit hit;
+                        if (Physics.Raycast(treeWorldPos + new Vector3(0, 10, 0), -Vector3.up, out hit, 100, layerMask) || 
+                            Physics.Raycast(treeWorldPos + new Vector3(0, 10, 0), Vector3.up, out hit, 100, layerMask))
+                        {
+                            float treeHeight = (hit.point.y - terrain.gameObject.transform.position.y) / terrainData.size.y;
+                            instance.position = new Vector3(instance.position.x, treeHeight, instance.position.z);
+                        }
+
+                        instance.rotation = Random.Range(vegetationProperties[tp].minRotation, vegetationProperties[tp].maxRotation);
+                        instance.widthScale = Mathf.Max(0.01f, thisScale);
+                        instance.heightScale = Mathf.Max(0.01f, thisScale);
+                        instance.prototypeIndex = tp;
+                        instance.color = Color.Lerp(vegetationProperties[tp].colour1, vegetationProperties[tp].colour2, Random.value);
+                        instance.lightmapColor = vegetationProperties[tp].lightColour;
+
+                        allVegetation.Add(instance);
+                        if (allVegetation.Count >= maxTrees) goto TREESDONE;
+                    }
                 }
             }
         }

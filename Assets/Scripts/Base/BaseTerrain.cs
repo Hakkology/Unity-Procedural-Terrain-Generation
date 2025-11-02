@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class BaseTerrain : MonoBehaviour, IGeneratable
 {
+    [SerializeField]
+    int terrainLayer = 0;
+
     protected int heightMapRes => terrainData.heightmapResolution;
     protected float[,] GetHeights() => terrainData.GetHeights(0, 0, heightMapRes, heightMapRes);
     protected float[,] GetHeightMap()
@@ -34,28 +37,48 @@ public class BaseTerrain : MonoBehaviour, IGeneratable
 
         SerializedProperty tagsProp = tagManager.FindProperty("tags");
 
-        AddTag(tagsProp, "Terrain");
-        AddTag(tagsProp, "Cloud");
-        AddTag(tagsProp, "Shore");
+        AddTag(tagsProp, "Terrain", TagType.Tag);
+        AddTag(tagsProp, "Cloud", TagType.Tag);
+        AddTag(tagsProp, "Shore", TagType.Tag);
         tagManager.ApplyModifiedProperties();
-        this.gameObject.tag = "Terrain";
+
+        SerializedProperty layerProp = tagManager.FindProperty("layers");
+        terrainLayer = AddTag(layerProp, "Terrain", TagType.Layer);
+        tagManager.ApplyModifiedProperties();
+
+        terrain.gameObject.tag = "Terrain";
+        terrain.gameObject.layer = terrainLayer;
     }
 
-    void AddTag(SerializedProperty tagsProp, string newTag)
+    int AddTag(SerializedProperty tagsProp, string newTag, TagType tType)
     {
         bool found = false;
         for (var i = 0; i < tagsProp.arraySize; i++)
         {
             SerializedProperty t = tagsProp.GetArrayElementAtIndex(i);
-            if (t.stringValue.Equals(newTag)) { found = true; break; }
+            if (t.stringValue.Equals(newTag)) { found = true; return i; }
         }
 
-        if (!found)
+        if (!found && tType == TagType.Tag)
         {
             tagsProp.InsertArrayElementAtIndex(0);
             SerializedProperty newTagProp = tagsProp.GetArrayElementAtIndex(0);
             newTagProp.stringValue = newTag;
         }
+        else if (!found && tType == TagType.Layer)
+        {
+            for (int j = 8; j < tagsProp.arraySize; j++)
+            {
+                SerializedProperty newLayer = tagsProp.GetArrayElementAtIndex(j);
+                if (newLayer.stringValue == "")
+                {
+                    newLayer.stringValue = newTag;
+                    return j;
+                }
+            }
+        }
+
+        return -1;
     }
 
     public void ResetTerrain()
