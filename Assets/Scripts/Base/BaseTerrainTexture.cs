@@ -40,7 +40,7 @@ public class BaseTerrainTexture : MonoBehaviour, ITexturable
             AssetDatabase.CreateAsset(newSplatPrototypes[spIndex], path);
 
             spIndex++;
-            Selection.activeObject = this.gameObject;
+            Selection.activeObject = gameObject;
         }
 
         terrainData.terrainLayers = newSplatPrototypes;
@@ -53,6 +53,7 @@ public class BaseTerrainTexture : MonoBehaviour, ITexturable
             for (int x = 0; x < terrainData.alphamapWidth; x++)
             {
                 float[] splat = new float[terrainData.alphamapLayers];
+                bool emptySplat = true;
 
                 for (int i = 0; i < splatHeights.Count; i++)
                 {
@@ -79,15 +80,26 @@ public class BaseTerrainTexture : MonoBehaviour, ITexturable
                         else if (heightMap[hmx, hmy] >= splatHeights[i].maxHeight)
                             splat[i] = 1 - Mathf.Abs(heightMap[hmx, hmy] - splatHeights[i].maxHeight) / offset;
                         else splat[i] = 1;
+
+                        emptySplat = false;
                     }
                 }
 
                 NormalizeVector(ref splat);
 
-                for (int j = 0; j < splatHeights.Count; j++)
+                if (emptySplat)
                 {
-                    splatMapData[x, y, j] = splat[j];
+                    splatMapData[x, y, 0] = splat[1];
                 }
+                else
+                {
+                    for (int j = 0; j < splatHeights.Count; j++)
+                    {
+                        splatMapData[x, y, j] = splat[j];
+                    }
+                }
+
+
             }
         }
 
@@ -128,13 +140,11 @@ public class BaseTerrainTexture : MonoBehaviour, ITexturable
             return;
         }
 
-        // 1. TerrainData üzerindeki terrainLayers’ı sıfırla
         terrainData.terrainLayers = new TerrainLayer[0];
 
-        // 2. Splat/Alphamap verisini sıfırla (tüm yüzey beyaz = hiçbir doku yok)
         int width = terrainData.alphamapWidth;
         int height = terrainData.alphamapHeight;
-        int layers = Mathf.Max(1, terrainData.alphamapLayers); // 0 olmasın
+        int layers = Mathf.Max(1, terrainData.alphamapLayers); 
 
         float[,,] emptySplat = new float[width, height, layers];
         for (int y = 0; y < height; y++)
@@ -155,6 +165,8 @@ public class BaseTerrainTexture : MonoBehaviour, ITexturable
         {
             total += v[i];
         }
+
+        if (total == 0) return;
 
         for (int i = 0; i < v.Length; i++)
         {
