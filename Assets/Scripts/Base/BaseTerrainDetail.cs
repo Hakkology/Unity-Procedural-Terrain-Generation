@@ -289,7 +289,7 @@ public class BaseTerrainDetail : MonoBehaviour, ITexturable, IVegetative, ITerra
             if (newDetailPrototypes[dIndex].prototype)
             {
                 newDetailPrototypes[dIndex].usePrototypeMesh = true;
-                newDetailPrototypes[dIndex].renderMode = DetailRenderMode.VertexLit;
+                newDetailPrototypes[dIndex].renderMode = DetailRenderMode.Grass;
             }
             else
             {
@@ -299,7 +299,7 @@ public class BaseTerrainDetail : MonoBehaviour, ITexturable, IVegetative, ITerra
 
             dIndex++;
         }
-        
+
         terrainData.detailPrototypes = newDetailPrototypes;
     }
 
