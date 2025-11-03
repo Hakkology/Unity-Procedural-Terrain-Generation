@@ -4,7 +4,7 @@ using UnityEditor;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class BaseTerrainDetail : MonoBehaviour, ITexturable, IVegetative
+public class BaseTerrainDetail : MonoBehaviour, ITexturable, IVegetative, ITerrainDetail
 {
     protected int heightMapRes => terrainData.heightmapResolution;
     protected float[,] GetHeights() => terrainData.GetHeights(0, 0, heightMapRes, heightMapRes);
@@ -14,6 +14,14 @@ public class BaseTerrainDetail : MonoBehaviour, ITexturable, IVegetative
     
     public int maxTrees;
     public int treeSpacing;
+
+    public int maxDetails;
+    public int detailSpacing;
+
+    public List<DetailProperties> detailProperties = new List<DetailProperties>()
+    {
+        new DetailProperties()
+    };
 
     public List<SplatHeights> splatHeights = new List<SplatHeights>()
     {
@@ -222,7 +230,7 @@ public class BaseTerrainDetail : MonoBehaviour, ITexturable, IVegetative
                     float thisHeightStart = vegetationProperties[tp].minHeight;
                     float thisHeightEnd = vegetationProperties[tp].maxHeight;
 
-                    float normX = x * 1.0f / (terrainData.alphamapWidth -1);
+                    float normX = x * 1.0f / (terrainData.alphamapWidth - 1);
                     float normY = z * 1.0f / (terrainData.alphamapHeight - 1);
                     float steepness = terrainData.GetSteepness(normX, normY);
 
@@ -240,7 +248,7 @@ public class BaseTerrainDetail : MonoBehaviour, ITexturable, IVegetative
                                                             instance.position.y * terrainData.size.y,
                                                             instance.position.z * terrainData.size.z) + this.transform.position;
                         RaycastHit hit;
-                        if (Physics.Raycast(treeWorldPos + new Vector3(0, 10, 0), -Vector3.up, out hit, 100, layerMask) || 
+                        if (Physics.Raycast(treeWorldPos + new Vector3(0, 10, 0), -Vector3.up, out hit, 100, layerMask) ||
                             Physics.Raycast(treeWorldPos + new Vector3(0, 10, 0), Vector3.up, out hit, 100, layerMask))
                         {
                             float treeHeight = (hit.point.y - terrain.gameObject.transform.position.y) / terrainData.size.y;
@@ -264,6 +272,62 @@ public class BaseTerrainDetail : MonoBehaviour, ITexturable, IVegetative
     TREESDONE:
         terrainData.treeInstances = allVegetation.ToArray();
     }
+    
+    public void ApplyDetails()
+    {
+        DetailPrototype[] newDetailPrototypes;
+        newDetailPrototypes = new DetailPrototype[detailProperties.Count];
+        int dIndex = 0;
+
+        foreach (DetailProperties d in detailProperties)
+        {
+            newDetailPrototypes[dIndex] = new DetailPrototype();
+            newDetailPrototypes[dIndex].prototype = d.prototype;
+            newDetailPrototypes[dIndex].prototypeTexture = d.protoTypeTexture;
+            newDetailPrototypes[dIndex].healthyColor = Color.white;
+
+            if (newDetailPrototypes[dIndex].prototype)
+            {
+                newDetailPrototypes[dIndex].usePrototypeMesh = true;
+                newDetailPrototypes[dIndex].renderMode = DetailRenderMode.VertexLit;
+            }
+            else
+            {
+                newDetailPrototypes[dIndex].usePrototypeMesh = false;
+                newDetailPrototypes[dIndex].renderMode = DetailRenderMode.GrassBillboard;
+            }
+
+            dIndex++;
+        }
+        
+        terrainData.detailPrototypes = newDetailPrototypes;
+    }
+
+    public void AddDetail()
+    {
+        detailProperties.Add(new DetailProperties());
+    }
+
+    public void RemoveDetail()
+    {
+        List<DetailProperties> keepDetailProps = new List<DetailProperties>();
+
+        for (int i = 0; i < detailProperties.Count; i++)
+        {
+            if (!detailProperties[i].remove)
+            {
+                keepDetailProps.Add(detailProperties[i]);
+            }
+        }
+
+        if (keepDetailProps.Count == 0)
+        {
+            keepDetailProps.Add(detailProperties[0]);
+        }
+
+        detailProperties = keepDetailProps;
+    }
+
 
     void NormalizeVector(ref float[] v)
     {

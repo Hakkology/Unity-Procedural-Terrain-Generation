@@ -132,7 +132,7 @@ GameObject:
   m_Component:
   - component: {fileID: 249173213}
   m_Layer: 0
-  m_Name: TextureGeneration
+  m_Name: TerrainDetailGeneration
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -689,6 +689,19 @@ MonoBehaviour:
   terrainData: {fileID: 15600000, guid: 8d1662e69504cd196b4cbe6612c7b871, type: 2}
   maxTrees: 0
   treeSpacing: 0
+  maxDetails: 0
+  detailSpacing: 0
+  detailProperties:
+  - prototype: {fileID: 0}
+    protoTypeTexture: {fileID: 0}
+    minHeight: 0.1
+    maxHeight: 0.2
+    minSlope: 0
+    maxSlope: 90
+    overlap: 0.01
+    feather: 0.05
+    density: 0.5
+    remove: 0
   splatHeights:
   - texture: {fileID: 2800000, guid: dd49ed99f55924d13bacefd240626bc5, type: 3}
     textureNormalMap: {fileID: 0}
@@ -805,6 +818,19 @@ MonoBehaviour:
   terrainData: {fileID: 15600000, guid: 8d1662e69504cd196b4cbe6612c7b871, type: 2}
   maxTrees: 4000
   treeSpacing: 10
+  maxDetails: 0
+  detailSpacing: 0
+  detailProperties:
+  - prototype: {fileID: 0}
+    protoTypeTexture: {fileID: 0}
+    minHeight: 0.1
+    maxHeight: 0.2
+    minSlope: 0
+    maxSlope: 90
+    overlap: 0.01
+    feather: 0.05
+    density: 0.5
+    remove: 0
   splatHeights:
   - texture: {fileID: 2800000, guid: d44cec25420524046b0137655ed7f307, type: 3}
     textureNormalMap: {fileID: 2800000, guid: f8c9bb189b5f4d344bc5193ab9446783, type: 3}
@@ -905,7 +931,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e54458940aecd944aecf4f395b74176, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  terrainLayer: 0
+  terrainLayer: 3
   terrain: {fileID: 470084382}
   terrainData: {fileID: 15600000, guid: 8d1662e69504cd196b4cbe6612c7b871, type: 2}
   resetTerrain: 1
@@ -1104,7 +1130,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f54e9153be05bacc2ba9a32d6b51caa1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  terrainLayer: 0
+  terrainLayer: 3
   terrain: {fileID: 470084382}
   terrainData: {fileID: 15600000, guid: 8d1662e69504cd196b4cbe6612c7b871, type: 2}
   resetTerrain: 1

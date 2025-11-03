@@ -11,11 +11,16 @@ public class BaseTerrainDetailEditor : Editor
     public bool showTerrainData = true;
     public bool showSplatMaps = false;
     public bool showVegetation = false;
+    public bool showDetails = false;
 
     GUITableState splatMapTable;
     GUITableState vegetationTable;
+    GUITableState detailsTable;
+    
     protected SerializedProperty maxTrees;
     protected SerializedProperty treeSpacing;
+    protected SerializedProperty maxDetails;
+    protected SerializedProperty detailSpacing;
 
 
     protected virtual void OnEnable()
@@ -28,6 +33,10 @@ public class BaseTerrainDetailEditor : Editor
         maxTrees = serializedObject.FindProperty("maxTrees");
         treeSpacing = serializedObject.FindProperty("treeSpacing");
         vegetationTable = new GUITableState("vegetationTable");
+
+        maxDetails = serializedObject.FindProperty("maxDetails");
+        detailSpacing = serializedObject.FindProperty("detailSpacing");
+        detailsTable = new GUITableState("detailsTable");
     }
 
     public override void OnInspectorGUI()
@@ -41,9 +50,12 @@ public class BaseTerrainDetailEditor : Editor
             EditorGUILayout.PropertyField(terrainDataProp);
         }
 
+        EditorGUILayout.Space();
         DrawTerrainTextureParameters();
         EditorGUILayout.Space();
         DrawTerrainVegetationParameters();
+        EditorGUILayout.Space();
+        DrawTerrainDetailingParameters();
         EditorGUILayout.Space();
         DrawAdditionalButtons();
 
@@ -87,7 +99,7 @@ public class BaseTerrainDetailEditor : Editor
             EditorGUILayout.IntSlider(maxTrees, 0, 10000, new GUIContent("Max Trees"));
             EditorGUILayout.IntSlider(treeSpacing, 1, 50, new GUIContent("Tree Spacing"));
             EditorGUILayout.Space();
-        
+
             vegetationTable = GUITableLayout.DrawTable(vegetationTable, serializedObject.FindProperty("vegetationProperties"));
 
             GUILayout.Space(20);
@@ -101,6 +113,35 @@ public class BaseTerrainDetailEditor : Editor
 
             EditorGUILayout.Space();
             if (GUILayout.Button("Apply Vegetation")) terrain.ApplyVegetation();
+        }
+    }
+    
+    public void DrawTerrainDetailingParameters()
+    {
+        ITerrainDetail terrainDetail = (ITerrainDetail)target;
+        showDetails = EditorGUILayout.Foldout(showDetails, "Detailing");
+        if (showDetails)
+        {
+            EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+            GUILayout.Label("Detailing Features", EditorStyles.boldLabel);
+
+            EditorGUILayout.IntSlider(maxDetails, 0, 10000, new GUIContent("Max Details"));
+            EditorGUILayout.IntSlider(detailSpacing, 1, 50, new GUIContent("Spacing"));
+            EditorGUILayout.Space();
+
+            detailsTable = GUITableLayout.DrawTable(detailsTable, serializedObject.FindProperty("detailProperties"));
+
+            GUILayout.Space(20);
+
+            EditorGUILayout.Space();
+
+            EditorGUILayout.BeginHorizontal();
+            if (GUILayout.Button("+")) terrainDetail.AddDetail();
+            if (GUILayout.Button("-")) terrainDetail.RemoveDetail();
+            EditorGUILayout.EndHorizontal();
+
+            EditorGUILayout.Space();
+            if (GUILayout.Button("Apply Details")) terrainDetail.ApplyDetails();
         }
     }
     
