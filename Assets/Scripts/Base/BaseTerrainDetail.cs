@@ -468,7 +468,28 @@ public class BaseTerrainDetail : MonoBehaviour, ITexturable, IVegetative, ITerra
 
     private void ThermalErosion()
     {
-        throw new System.NotImplementedException();
+        float[,] heightMap = GetHeights();
+
+        for (int y = 0; y < heightMapRes; y++)
+        {
+            for (int x = 0; x < heightMapRes; x++)
+            {
+                Vector2 thisLocation = new Vector2(x, y);
+                List<Vector2> neighbours = GenerateNeighbours(thisLocation, heightMapRes, heightMapRes);
+
+                foreach (Vector2 n in neighbours)
+                {
+                    if (heightMap[x, y] > heightMap[(int)n.x, (int)n.y] + erosionStrength)
+                    {
+                        float currentHeight = heightMap[x, y];
+                        heightMap[x, y] -= currentHeight * .01f;
+                        heightMap[(int)n.x, (int)n.y] += currentHeight * .01f;
+                    }
+                }
+            }
+        }
+
+        terrainData.SetHeights(0, 0, heightMap);
     }
 
     private void RainErosion()
