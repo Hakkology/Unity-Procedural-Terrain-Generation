@@ -1,13 +1,19 @@
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEditor;
+using UnityEditor.Rendering.Universal;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class BaseTerrainDetail : MonoBehaviour, ITexturable, IVegetative, ITerrainDetail
+public class BaseTerrainDetail : MonoBehaviour, ITexturable, IVegetative, ITerrainDetail, IWaterDetail, IErodeDetail
 {
     protected int heightMapRes => terrainData.heightmapResolution;
     protected float[,] GetHeights() => terrainData.GetHeights(0, 0, heightMapRes, heightMapRes);
+
+    protected float[,] GetHeightMap()
+    {
+        return new float[heightMapRes, heightMapRes];
+    }
 
     public Terrain terrain;
     public TerrainData terrainData;
@@ -17,6 +23,16 @@ public class BaseTerrainDetail : MonoBehaviour, ITexturable, IVegetative, ITerra
 
     public int maxDetails;
     public int detailSpacing;
+
+    public float waterHeight;
+    public GameObject WaterGo;
+
+    public ErosionTypes erosionType = ErosionTypes.Rain;
+    public float erosionStrength = .1f;
+    public int droplets = 5;
+    public float solubility = .01f;
+    public int springsPerRiver = 5;
+    public int erosionSmoothAmount = 5;
 
     public List<DetailProperties> detailProperties = new List<DetailProperties>()
     {
@@ -393,4 +409,127 @@ public class BaseTerrainDetail : MonoBehaviour, ITexturable, IVegetative, ITerra
     }
 
     protected virtual void DefineAdditionalTextureBehaviour() {}
+
+    public void AddWater()
+    {
+        GameObject water = GameObject.Find("water");
+        if (!water)
+        {
+            water = Instantiate(WaterGo, terrain.transform.position, terrain.transform.rotation);
+            water.name = "water";
+        }
+        water.transform.position = terrain.transform.position + new Vector3(
+            terrainData.size.x / 2,
+            waterHeight * terrainData.size.y,
+            terrainData.size.z / 2);
+        water.transform.localScale = new Vector3(terrainData.size.x, 1, terrainData.size.z);
+    }
+
+    public void AddErode()
+    {
+        switch (erosionType)
+        {
+            case ErosionTypes.Rain:
+                RainErosion();
+                break;
+            case ErosionTypes.Thermal:
+                ThermalErosion();
+                break;
+            case ErosionTypes.Tidal:
+                TidalErosion();
+                break;
+            case ErosionTypes.River:
+                RiverErosion();
+                break;
+            case ErosionTypes.Wind:
+                WindErosion();
+                break;
+            default:
+                break;
+        }
+
+        SmoothErosion(erosionSmoothAmount);
+    }
+
+    private void WindErosion()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    private void RiverErosion()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    private void TidalErosion()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    private void ThermalErosion()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    private void RainErosion()
+    {
+        float[,] heightMap = GetHeightMap();
+        for (int i = 0; i < droplets; i++)
+            heightMap[Random.Range(0, heightMapRes), Random.Range(0, heightMapRes)] -= erosionStrength;
+        
+        terrainData.SetHeights(0, 0, heightMap);
+    }
+
+    public void SmoothErosion(int smoothErosionCount)
+    {
+        float[,] heightMap = GetHeightMap();
+
+        try
+        {
+            for (int i = 0; i < smoothErosionCount; i++)
+            {
+                for (int y = 0; y < heightMapRes; y++)
+                {
+                    for (int x = 0; x < heightMapRes; x++)
+                    {
+                        float avgHeight = heightMap[x, y];
+                        List<Vector2> neighbours = GenerateNeighbours(new Vector2(x, y), heightMapRes, heightMapRes);
+
+                        foreach (Vector2 n in neighbours)
+                            avgHeight += heightMap[(int)n.x, (int)n.y];
+
+                        heightMap[x, y] = avgHeight / ((float)neighbours.Count + 1);
+                    }
+                }
+            }
+        }
+        finally
+        {
+            EditorUtility.ClearProgressBar();
+        }
+
+        terrainData.SetHeights(0, 0, heightMap);
+    }
+
+    List<Vector2> GenerateNeighbours(Vector2 pos, int width, int height) {
+
+        List<Vector2> neighbours = new List<Vector2>();
+
+        for (int y = -1; y < 2; ++y) { // between -1 and 1.
+
+            for (int x = -1; x < 2; ++x) {
+
+                if (!(x == 0 && y == 0)) {
+
+                    Vector2 nPos = new Vector2(
+                        Mathf.Clamp(pos.x + x, 0.0f, width - 1),
+                        Mathf.Clamp(pos.y + y, 0.0f, height - 1));
+
+                    if (!neighbours.Contains(nPos))
+                        neighbours.Add(nPos);
+                }
+            }
+        }
+        return neighbours;
+    }
 }

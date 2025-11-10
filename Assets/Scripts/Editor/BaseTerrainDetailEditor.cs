@@ -1,3 +1,4 @@
+using System;
 using EditorGUITable;
 using UnityEditor;
 using UnityEngine;
@@ -12,6 +13,8 @@ public class BaseTerrainDetailEditor : Editor
     public bool showSplatMaps = false;
     public bool showVegetation = false;
     public bool showDetails = false;
+    public bool showWater = false;
+    public bool showErosion = false;
 
     GUITableState splatMapTable;
     GUITableState vegetationTable;
@@ -22,6 +25,15 @@ public class BaseTerrainDetailEditor : Editor
     protected SerializedProperty maxDetails;
     protected SerializedProperty detailSpacing;
 
+    protected SerializedProperty water;
+    protected SerializedProperty waterHeight;
+
+    protected SerializedProperty erosionType;
+    protected SerializedProperty erosionStrength;
+    protected SerializedProperty droplets;
+    protected SerializedProperty solubility;
+    protected SerializedProperty springsPerRiver;
+    protected SerializedProperty erosionSmoothAmount;
 
     protected virtual void OnEnable()
     {
@@ -37,6 +49,16 @@ public class BaseTerrainDetailEditor : Editor
         maxDetails = serializedObject.FindProperty("maxDetails");
         detailSpacing = serializedObject.FindProperty("detailSpacing");
         detailsTable = new GUITableState("detailsTable");
+
+        water = serializedObject.FindProperty("WaterGo");
+        waterHeight = serializedObject.FindProperty("waterHeight");
+
+        erosionType = serializedObject.FindProperty("erosionType");
+        erosionStrength = serializedObject.FindProperty("erosionStrength");
+        droplets = serializedObject.FindProperty("droplets");
+        solubility = serializedObject.FindProperty("solubility");
+        springsPerRiver = serializedObject.FindProperty("springsPerRiver");
+        erosionSmoothAmount = serializedObject.FindProperty("erosionSmoothAmount");
     }
 
     public override void OnInspectorGUI()
@@ -57,10 +79,15 @@ public class BaseTerrainDetailEditor : Editor
         EditorGUILayout.Space();
         DrawTerrainDetailingParameters();
         EditorGUILayout.Space();
+        DrawWaterDetailParameters();
+        EditorGUILayout.Space();
+        DrawErosionDetailParameters();
+        EditorGUILayout.Space();
         DrawAdditionalButtons();
 
         serializedObject.ApplyModifiedProperties();
     }
+
 
     protected virtual void DrawTerrainTextureParameters()
     {
@@ -115,7 +142,7 @@ public class BaseTerrainDetailEditor : Editor
             if (GUILayout.Button("Apply Vegetation")) terrain.ApplyVegetation();
         }
     }
-    
+
     public void DrawTerrainDetailingParameters()
     {
         ITerrainDetail terrainDetail = (ITerrainDetail)target;
@@ -143,6 +170,44 @@ public class BaseTerrainDetailEditor : Editor
 
             EditorGUILayout.Space();
             if (GUILayout.Button("Apply Details")) terrainDetail.ApplyDetails();
+        }
+    }
+
+    private void DrawWaterDetailParameters()
+    {
+        IWaterDetail waterDetail = (IWaterDetail)target;
+        showWater = EditorGUILayout.Foldout(showWater, "Water Details");
+        if (showWater)
+        {
+            EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+            GUILayout.Label("Water Detailing Features", EditorStyles.boldLabel);
+
+            EditorGUILayout.Slider(waterHeight, 0, 1, new GUIContent("Water Height"));
+            EditorGUILayout.PropertyField(water);
+
+            EditorGUILayout.Space();
+            if (GUILayout.Button("Add Water")) waterDetail.AddWater();
+        }
+    }
+    
+    private void DrawErosionDetailParameters()
+    {
+        IErodeDetail erodeDetail = (IErodeDetail)target;
+        showErosion = EditorGUILayout.Foldout(showErosion, "Erosion Details");
+        if (showErosion)
+        {
+            EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+            GUILayout.Label("Erosion Detailing Features", EditorStyles.boldLabel);
+
+            EditorGUILayout.PropertyField(erosionType, new GUIContent("Erosion Type"));
+            EditorGUILayout.Slider(erosionStrength, 0f, 1f, new GUIContent("Erosion Strength"));
+            EditorGUILayout.IntSlider(droplets, 1, 500, new GUIContent("Droplets"));
+            EditorGUILayout.Slider(solubility, 0.001f, 1f, new GUIContent("Solubility"));
+            EditorGUILayout.IntSlider(springsPerRiver, 1, 20, new GUIContent("Springs Per River"));
+            EditorGUILayout.IntSlider(erosionSmoothAmount, 0, 10, new GUIContent("Erosion Smooth Amount"));
+
+            EditorGUILayout.Space();
+            if (GUILayout.Button("Add Water")) erodeDetail.AddErode();
         }
     }
     
