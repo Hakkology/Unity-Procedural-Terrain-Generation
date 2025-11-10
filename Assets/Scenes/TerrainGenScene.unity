@@ -697,6 +697,7 @@ MonoBehaviour:
   erosionStrength: 0.1
   droplets: 5
   solubility: 0.01
+  erosionAmount: 0.01
   springsPerRiver: 5
   erosionSmoothAmount: 5
   detailProperties:
@@ -918,12 +919,13 @@ MonoBehaviour:
   detailSpacing: 2
   waterHeight: 0.01
   WaterGo: {fileID: 425797958840048916, guid: f0702830c1970764693293a91df9e61c, type: 3}
-  erosionType: 0
+  erosionType: 1
   erosionStrength: 0.1
   droplets: 5
   solubility: 0.01
+  erosionAmount: 0.01
   springsPerRiver: 5
-  erosionSmoothAmount: 5
+  erosionSmoothAmount: 0
   detailProperties:
   - prototype: {fileID: -927199367670048503, guid: 8e41f14c6552d48e6a7992aaecc808e4,
       type: 3}
