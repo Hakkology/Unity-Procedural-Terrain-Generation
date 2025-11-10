@@ -698,6 +698,11 @@ MonoBehaviour:
     maxHeight: 0.2
     minSlope: 0
     maxSlope: 90
+    dryColor: {r: 1, g: 1, b: 1, a: 1}
+    healthyColor: {r: 1, g: 1, b: 1, a: 1}
+    heightRange: {x: 1, y: 1}
+    widthRange: {x: 1, y: 1}
+    noiseSpread: 0.5
     overlap: 0.01
     feather: 0.05
     density: 0.5
@@ -770,6 +775,84 @@ MonoBehaviour:
     colour2: {r: 1, g: 1, b: 1, a: 1}
     lightColour: {r: 1, g: 1, b: 1, a: 1}
     remove: 0
+--- !u!1001 &1461595944
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 263261155427779765, guid: b388e215399384e54b620e74e69b8b33,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 263261155427779765, guid: b388e215399384e54b620e74e69b8b33,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 263261155427779765, guid: b388e215399384e54b620e74e69b8b33,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 500
+      objectReference: {fileID: 0}
+    - target: {fileID: 263261155427779765, guid: b388e215399384e54b620e74e69b8b33,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 263261155427779765, guid: b388e215399384e54b620e74e69b8b33,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 500
+      objectReference: {fileID: 0}
+    - target: {fileID: 263261155427779765, guid: b388e215399384e54b620e74e69b8b33,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 263261155427779765, guid: b388e215399384e54b620e74e69b8b33,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 263261155427779765, guid: b388e215399384e54b620e74e69b8b33,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 263261155427779765, guid: b388e215399384e54b620e74e69b8b33,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 263261155427779765, guid: b388e215399384e54b620e74e69b8b33,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 263261155427779765, guid: b388e215399384e54b620e74e69b8b33,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 263261155427779765, guid: b388e215399384e54b620e74e69b8b33,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4197590765368614237, guid: b388e215399384e54b620e74e69b8b33,
+        type: 3}
+      propertyPath: m_Name
+      value: WaterPlane
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: b388e215399384e54b620e74e69b8b33, type: 3}
 --- !u!1 &1515026558
 GameObject:
   m_ObjectHideFlags: 0
@@ -828,6 +911,11 @@ MonoBehaviour:
     maxHeight: 1
     minSlope: 20
     maxSlope: 90
+    dryColor: {r: 1, g: 1, b: 1, a: 1}
+    healthyColor: {r: 1, g: 1, b: 1, a: 1}
+    heightRange: {x: 1, y: 1}
+    widthRange: {x: 1, y: 1}
+    noiseSpread: 0.5
     overlap: 0.01
     feather: 0.05
     density: 0.5
@@ -838,6 +926,11 @@ MonoBehaviour:
     maxHeight: 0.6
     minSlope: 0
     maxSlope: 90
+    dryColor: {r: 1, g: 1, b: 1, a: 1}
+    healthyColor: {r: 1, g: 1, b: 1, a: 1}
+    heightRange: {x: 1, y: 1}
+    widthRange: {x: 1, y: 1}
+    noiseSpread: 0.5
     overlap: 0.01
     feather: 0.05
     density: 0.5
@@ -1172,3 +1265,4 @@ SceneRoots:
   - {fileID: 470084383}
   - {fileID: 1168357609}
   - {fileID: 249173213}
+  - {fileID: 1461595944}

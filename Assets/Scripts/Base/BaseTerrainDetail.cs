@@ -285,7 +285,13 @@ public class BaseTerrainDetail : MonoBehaviour, ITexturable, IVegetative, ITerra
             newDetailPrototypes[dIndex] = new DetailPrototype();
             newDetailPrototypes[dIndex].prototype = d.prototype;
             newDetailPrototypes[dIndex].prototypeTexture = d.protoTypeTexture;
-            newDetailPrototypes[dIndex].healthyColor = Color.white;
+            newDetailPrototypes[dIndex].healthyColor = d.healthyColor;
+            newDetailPrototypes[dIndex].dryColor = d.dryColor;
+            newDetailPrototypes[dIndex].minHeight = d.heightRange.x;
+            newDetailPrototypes[dIndex].maxHeight = d.heightRange.y;
+            newDetailPrototypes[dIndex].minWidth = d.widthRange.x;
+            newDetailPrototypes[dIndex].maxWidth = d.widthRange.y;
+            newDetailPrototypes[dIndex].noiseSeed = (int)d.noiseSpread;
 
             if (newDetailPrototypes[dIndex].prototype)
             {
