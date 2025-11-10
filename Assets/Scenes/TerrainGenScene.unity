@@ -821,7 +821,8 @@ MonoBehaviour:
   maxDetails: 0
   detailSpacing: 0
   detailProperties:
-  - prototype: {fileID: 0}
+  - prototype: {fileID: -927199367670048503, guid: 8e41f14c6552d48e6a7992aaecc808e4,
+      type: 3}
     protoTypeTexture: {fileID: 0}
     minHeight: 0.1
     maxHeight: 0.2

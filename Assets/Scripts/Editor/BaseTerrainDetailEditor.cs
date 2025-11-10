@@ -130,6 +130,8 @@ public class BaseTerrainDetailEditor : Editor
             EditorGUILayout.Space();
 
             detailsTable = GUITableLayout.DrawTable(detailsTable, serializedObject.FindProperty("detailProperties"));
+            
+            ((BaseTerrainDetail)target).terrain.detailObjectDistance = maxDetails.intValue;
 
             GUILayout.Space(20);
 

@@ -168,7 +168,7 @@ public class BaseTerrainDetail : MonoBehaviour, ITexturable, IVegetative, ITerra
         for (int y = 0; y < height; y++)
             for (int x = 0; x < width; x++)
                 for (int l = 0; l < layers; l++)
-                    emptySplat[x, y, l] = (l == 0) ? 1f : 0f; // ilk layer tam dolu, diğerleri 0
+                    emptySplat[x, y, l] = (l == 0) ? 1f : 0f; 
 
         terrainData.SetAlphamaps(0, 0, emptySplat);
 
@@ -276,6 +276,7 @@ public class BaseTerrainDetail : MonoBehaviour, ITexturable, IVegetative, ITerra
     public void ApplyDetails()
     {
         DetailPrototype[] newDetailPrototypes;
+        float[,] heightMap = GetHeights();
         newDetailPrototypes = new DetailPrototype[detailProperties.Count];
         int dIndex = 0;
 
@@ -301,6 +302,39 @@ public class BaseTerrainDetail : MonoBehaviour, ITexturable, IVegetative, ITerra
         }
 
         terrainData.detailPrototypes = newDetailPrototypes;
+
+        for (int i = 0; i < terrainData.detailPrototypes.Length; i++)
+        {
+            int[,] detailMap = new int[terrainData.detailWidth, terrainData.detailHeight];
+
+            for (int y = 0; y < terrainData.detailHeight; y += detailSpacing)
+            {
+                for (int x = 0; x < terrainData.detailWidth; x += detailSpacing)
+                {
+                    if (Random.Range(0.0f, 1.0f) > detailProperties[i].density) continue;
+                    int xHM = (int)(x / (float)terrainData.detailWidth * heightMapRes);
+                    int yHM = (int)(y / (float)terrainData.detailHeight * heightMapRes);
+
+                    float thisNoise = Utils.Map(Mathf.PerlinNoise(x * detailProperties[i].feather,
+                                                y * detailProperties[i].feather), 0, 1, 0.5f, 1);
+                    float thisHeightStart = detailProperties[i].minHeight * thisNoise -
+                                            detailProperties[i].overlap * thisNoise;
+                    float nextHeightStart = detailProperties[i].maxHeight * thisNoise +
+                                            detailProperties[i].overlap * thisNoise;
+
+                    float thisHeight = heightMap[yHM, xHM];
+                    float steepness = terrainData.GetSteepness(xHM / (float)terrainData.size.x,
+                                                                yHM / (float)terrainData.size.z);
+                                                                
+                    if ((thisHeight >= thisHeightStart && thisHeight <= nextHeightStart) &&
+                        (steepness >= detailProperties[i].minSlope && steepness <= detailProperties[i].maxSlope)) {
+                        detailMap[y, x] = 1;
+                    }
+                }
+            }
+
+            terrainData.SetDetailLayer(0, 0, i, detailMap);
+        }
     }
 
     public void AddDetail()
