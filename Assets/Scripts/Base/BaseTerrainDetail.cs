@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Mathematics;
 using UnityEditor;
 using UnityEditor.Rendering.Universal;
@@ -31,6 +32,7 @@ public class BaseTerrainDetail : MonoBehaviour, ITexturable, IVegetative, ITerra
     public float erosionStrength = .1f;
     public int droplets = 5;
     public float solubility = .01f;
+    public float erosionAmount = .01f;
     public int springsPerRiver = 5;
     public int erosionSmoothAmount = 5;
 
@@ -458,12 +460,83 @@ public class BaseTerrainDetail : MonoBehaviour, ITexturable, IVegetative, ITerra
 
     private void RiverErosion()
     {
-        throw new System.NotImplementedException();
+        float[,] heightMap = GetHeights();
+        float[,] erosionMap = new float[heightMapRes, heightMapRes];
+
+        for (int i = 0; i < droplets; i++)
+        {
+            Vector2 dropletPosition = new Vector2(Random.Range(0, heightMapRes), Random.Range(0, heightMapRes));
+            erosionMap[(int)dropletPosition.x, (int)dropletPosition.y] = erosionStrength;
+            
+            for (int j = 0; j < springsPerRiver; j++)
+            {
+                erosionMap = RunRiver(dropletPosition, heightMap, erosionMap, heightMapRes, heightMapRes);
+            }
+        }
+
+        for (int y = 0; y < heightMapRes; y++)
+        {
+            for (int x = 0; x < heightMapRes; x++)
+            {
+                if (erosionMap[x, y] > 0)
+                    heightMap[x, y] -= erosionMap[x, y];
+            }
+        }
+
+        terrainData.SetHeights(0, 0, heightMap);
+    }
+
+    private float[,] RunRiver(Vector2 dropletPosition, float[,] heightMap, float[,] erosionMap, int heightMapRes1, int heightMapRes2)
+    {
+        while (erosionMap[(int)dropletPosition.x, (int)dropletPosition.y] > 0) 
+        {
+
+            List<Vector2> origNeighbours = GenerateNeighbours(dropletPosition, heightMapRes, heightMapRes);
+            var neighbours = origNeighbours.OrderBy(a => Random.value).ToList();
+            bool foundLower = false;
+
+            foreach (Vector2 n in neighbours)
+            {
+
+                if (heightMap[(int)n.x, (int)n.y] < heightMap[(int)dropletPosition.x, (int)dropletPosition.y])
+                {
+                    erosionMap[(int)n.x, (int)n.y] = erosionMap[(int)dropletPosition.x, (int)dropletPosition.y] - solubility;
+                    dropletPosition = n;
+                    foundLower = true;
+                    break;
+                }
+            }
+            
+            if (!foundLower) {
+                erosionMap[(int)dropletPosition.x, (int)dropletPosition.y] -= solubility;
+            }
+        }
+        return erosionMap;
     }
 
     private void TidalErosion()
     {
-        throw new System.NotImplementedException();
+        float[,] heightMap = GetHeights();
+
+        for (int y = 0; y < heightMapRes; y++)
+        {
+            for (int x = 0; x < heightMapRes; x++)
+            {
+                Vector2 thisLocation = new Vector2(x, y);
+                List<Vector2> neighbours = GenerateNeighbours(thisLocation, heightMapRes, heightMapRes);
+
+                foreach (Vector2 n in neighbours)
+                {
+                    if (heightMap[x, y] < waterHeight && heightMap[(int)n.x, (int)n.y] > waterHeight)
+                    {
+                        heightMap[x, y] = waterHeight;
+                        heightMap[(int)n.x, (int)n.y] = waterHeight;
+                    }
+                }
+            }
+        }
+
+        terrainData.SetHeights(0, 0, heightMap);
     }
 
     private void ThermalErosion()
@@ -482,8 +555,8 @@ public class BaseTerrainDetail : MonoBehaviour, ITexturable, IVegetative, ITerra
                     if (heightMap[x, y] > heightMap[(int)n.x, (int)n.y] + erosionStrength)
                     {
                         float currentHeight = heightMap[x, y];
-                        heightMap[x, y] -= currentHeight * .01f;
-                        heightMap[(int)n.x, (int)n.y] += currentHeight * .01f;
+                        heightMap[x, y] -= currentHeight * erosionAmount;
+                        heightMap[(int)n.x, (int)n.y] += currentHeight * erosionAmount;
                     }
                 }
             }

@@ -34,6 +34,7 @@ public class BaseTerrainDetailEditor : Editor
     protected SerializedProperty solubility;
     protected SerializedProperty springsPerRiver;
     protected SerializedProperty erosionSmoothAmount;
+    protected SerializedProperty erosionAmount;
 
     protected virtual void OnEnable()
     {
@@ -59,6 +60,7 @@ public class BaseTerrainDetailEditor : Editor
         solubility = serializedObject.FindProperty("solubility");
         springsPerRiver = serializedObject.FindProperty("springsPerRiver");
         erosionSmoothAmount = serializedObject.FindProperty("erosionSmoothAmount");
+        erosionAmount = serializedObject.FindProperty("erosionAmount");
     }
 
     public override void OnInspectorGUI()
@@ -203,6 +205,7 @@ public class BaseTerrainDetailEditor : Editor
             EditorGUILayout.Slider(erosionStrength, 0f, 1f, new GUIContent("Erosion Strength"));
             EditorGUILayout.IntSlider(droplets, 1, 500, new GUIContent("Droplets"));
             EditorGUILayout.Slider(solubility, 0.001f, 1f, new GUIContent("Solubility"));
+            EditorGUILayout.Slider(erosionAmount, 0.01f, 1f, new GUIContent("Erosion Amount"));
             EditorGUILayout.IntSlider(springsPerRiver, 1, 20, new GUIContent("Springs Per River"));
             EditorGUILayout.IntSlider(erosionSmoothAmount, 0, 10, new GUIContent("Erosion Smooth Amount"));
 
