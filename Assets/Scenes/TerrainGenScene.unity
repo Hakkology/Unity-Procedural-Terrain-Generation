@@ -462,7 +462,7 @@ Terrain:
   m_TreeBillboardDistance: 50
   m_TreeCrossFadeLength: 5
   m_TreeMaximumFullLODCount: 50
-  m_DetailObjectDistance: 80
+  m_DetailObjectDistance: 4000
   m_DetailObjectDensity: 1
   m_HeightmapPixelError: 5
   m_SplatMapDistance: 1000
@@ -818,14 +818,24 @@ MonoBehaviour:
   terrainData: {fileID: 15600000, guid: 8d1662e69504cd196b4cbe6612c7b871, type: 2}
   maxTrees: 4000
   treeSpacing: 10
-  maxDetails: 0
-  detailSpacing: 0
+  maxDetails: 4000
+  detailSpacing: 2
   detailProperties:
   - prototype: {fileID: -927199367670048503, guid: 8e41f14c6552d48e6a7992aaecc808e4,
       type: 3}
     protoTypeTexture: {fileID: 0}
-    minHeight: 0.1
-    maxHeight: 0.2
+    minHeight: 0.3
+    maxHeight: 1
+    minSlope: 20
+    maxSlope: 90
+    overlap: 0.01
+    feather: 0.05
+    density: 0.5
+    remove: 0
+  - prototype: {fileID: 0}
+    protoTypeTexture: {fileID: 2800000, guid: ba0dbc11bd11158b1100de1b44295342, type: 3}
+    minHeight: 0
+    maxHeight: 0.6
     minSlope: 0
     maxSlope: 90
     overlap: 0.01

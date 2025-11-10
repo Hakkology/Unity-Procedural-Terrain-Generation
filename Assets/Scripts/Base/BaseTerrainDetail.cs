@@ -303,6 +303,12 @@ public class BaseTerrainDetail : MonoBehaviour, ITexturable, IVegetative, ITerra
 
         terrainData.detailPrototypes = newDetailPrototypes;
 
+        float minDetailMapValue = 0;
+        float maxDetailMapValue = 16;
+
+        if (terrainData.detailScatterMode == DetailScatterMode.CoverageMode)
+            maxDetailMapValue = 255;
+
         for (int i = 0; i < terrainData.detailPrototypes.Length; i++)
         {
             int[,] detailMap = new int[terrainData.detailWidth, terrainData.detailHeight];
@@ -328,7 +334,7 @@ public class BaseTerrainDetail : MonoBehaviour, ITexturable, IVegetative, ITerra
                                                                 
                     if ((thisHeight >= thisHeightStart && thisHeight <= nextHeightStart) &&
                         (steepness >= detailProperties[i].minSlope && steepness <= detailProperties[i].maxSlope)) {
-                        detailMap[y, x] = 1;
+                        detailMap[y, x] = (int)Random.Range(minDetailMapValue, maxDetailMapValue);
                     }
                 }
             }
