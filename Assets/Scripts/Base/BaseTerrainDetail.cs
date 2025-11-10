@@ -482,7 +482,7 @@ public class BaseTerrainDetail : MonoBehaviour, ITexturable, IVegetative, ITerra
 
     public void SmoothErosion(int smoothErosionCount)
     {
-        float[,] heightMap = GetHeightMap();
+        float[,] heightMap = GetHeights();
 
         try
         {

@@ -620,7 +620,7 @@ MonoBehaviour:
   terrainLayer: 0
   terrain: {fileID: 470084382}
   terrainData: {fileID: 15600000, guid: 8d1662e69504cd196b4cbe6612c7b871, type: 2}
-  resetTerrain: 0
+  resetTerrain: 1
   smoothCount: 7
   MPDHeightMin: -2
   MPDHeightMax: 2.29
@@ -693,6 +693,12 @@ MonoBehaviour:
   detailSpacing: 0
   waterHeight: 0
   WaterGo: {fileID: 0}
+  erosionType: 0
+  erosionStrength: 0.1
+  droplets: 5
+  solubility: 0.01
+  springsPerRiver: 5
+  erosionSmoothAmount: 5
   detailProperties:
   - prototype: {fileID: 0}
     protoTypeTexture: {fileID: 0}
@@ -912,6 +918,12 @@ MonoBehaviour:
   detailSpacing: 2
   waterHeight: 0.01
   WaterGo: {fileID: 425797958840048916, guid: f0702830c1970764693293a91df9e61c, type: 3}
+  erosionType: 0
+  erosionStrength: 0.1
+  droplets: 5
+  solubility: 0.01
+  springsPerRiver: 5
+  erosionSmoothAmount: 5
   detailProperties:
   - prototype: {fileID: -927199367670048503, guid: 8e41f14c6552d48e6a7992aaecc808e4,
       type: 3}
@@ -1352,7 +1364,7 @@ MonoBehaviour:
   terrainLayer: 3
   terrain: {fileID: 470084382}
   terrainData: {fileID: 15600000, guid: 8d1662e69504cd196b4cbe6612c7b871, type: 2}
-  resetTerrain: 1
+  resetTerrain: 0
   smoothCount: 1
   randomHeightRange: {x: 0, y: 0.1}
 --- !u!4 &2037812415
