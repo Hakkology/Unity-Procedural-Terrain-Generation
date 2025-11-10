@@ -473,7 +473,7 @@ public class BaseTerrainDetail : MonoBehaviour, ITexturable, IVegetative, ITerra
 
     private void RainErosion()
     {
-        float[,] heightMap = GetHeightMap();
+        float[,] heightMap = GetHeights();
         for (int i = 0; i < droplets; i++)
             heightMap[Random.Range(0, heightMapRes), Random.Range(0, heightMapRes)] -= erosionStrength;
         

@@ -207,7 +207,7 @@ public class BaseTerrainDetailEditor : Editor
             EditorGUILayout.IntSlider(erosionSmoothAmount, 0, 10, new GUIContent("Erosion Smooth Amount"));
 
             EditorGUILayout.Space();
-            if (GUILayout.Button("Add Water")) erodeDetail.AddErode();
+            if (GUILayout.Button("Add Erode")) erodeDetail.AddErode();
         }
     }
     
