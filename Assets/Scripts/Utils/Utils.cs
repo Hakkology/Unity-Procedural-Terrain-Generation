@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 static public class Utils
@@ -20,8 +21,18 @@ static public class Utils
         return total / maxValue;
     }
 
-    public static float Map(float value, float originalMin, float originalMax, float targetMin, float targetMax) {
+    public static float Map(float value, float originalMin, float originalMax, float targetMin, float targetMax)
+    {
 
         return (value - originalMin) * (targetMax - targetMin) / (originalMax - originalMin) + targetMin;
+    }
+    
+    private static void ShuffleNeighbours(List<Vector2> list)
+    {
+        for (int i = list.Count - 1; i > 0; i--)
+        {
+            int j = UnityEngine.Random.Range(0, i + 1);
+            (list[i], list[j]) = (list[j], list[i]);
+        }
     }
 }
