@@ -4,5 +4,6 @@ public enum ErosionTypes
     Thermal,
     Tidal,
     River,
-    Wind
+    Wind,
+    Canyon,
 }

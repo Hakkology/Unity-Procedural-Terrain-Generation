@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Mathematics;
@@ -15,6 +16,7 @@ public class BaseTerrainDetail : MonoBehaviour, ITexturable, IVegetative, ITerra
     {
         return new float[heightMapRes, heightMapRes];
     }
+    float[,] tempHeightMap;
 
     public Terrain terrain;
     public TerrainData terrainData;
@@ -446,6 +448,9 @@ public class BaseTerrainDetail : MonoBehaviour, ITexturable, IVegetative, ITerra
             case ErosionTypes.Wind:
                 WindErosion();
                 break;
+            case ErosionTypes.Canyon:
+                CanyonErosion();
+                break;
             default:
                 break;
         }
@@ -453,9 +458,76 @@ public class BaseTerrainDetail : MonoBehaviour, ITexturable, IVegetative, ITerra
         SmoothErosion(erosionSmoothAmount);
     }
 
+    private void CanyonErosion()
+    {
+        float digDepth = 0.05f;
+        float bankSlope = 0.001f;
+        float maxDepth = 0.0f;
+
+        tempHeightMap = GetHeights();
+
+        int cX = 1;
+        int cY = UnityEngine.Random.Range(10, heightMapRes - 10);
+
+        while (cY >= 0 && cY < heightMapRes && cX > 0 && cX < heightMapRes)
+        {
+
+            CanyonCrawler(cX, cY, tempHeightMap[cX, cY] - digDepth, bankSlope, maxDepth);
+            cX += Random.Range(1, 3);
+            cY += Random.Range(-2, 3);
+        }
+        terrainData.SetHeights(0, 0, tempHeightMap);
+    }
+    
+    void CanyonCrawler(int x, int y, float height, float slope, float maxDepth) {
+
+        if (x < 0 || x >= heightMapRes) return;              // Off x range of map
+        if (y < 0 || y >= heightMapRes) return;              // Off y range of map
+        if (height <= maxDepth) return;             // Has hit lowest point
+        if (tempHeightMap[x, y] <= height) return;  // Has run into lower elevation
+
+        tempHeightMap[x, y] = height;
+
+        CanyonCrawler(x + 1, y, height + Random.Range(slope, slope + 0.01f), slope, maxDepth);
+        CanyonCrawler(x - 1, y, height + Random.Range(slope, slope + 0.01f), slope, maxDepth);
+        CanyonCrawler(x + 1, y + 1, height + Random.Range(slope, slope + 0.01f), slope, maxDepth);
+        CanyonCrawler(x - 1, y + 1, height + Random.Range(slope, slope + 0.01f), slope, maxDepth);
+        CanyonCrawler(x, y - 1, height + Random.Range(slope, slope + 0.01f), slope, maxDepth);
+        CanyonCrawler(x, y + 1, height + Random.Range(slope, slope + 0.01f), slope, maxDepth);
+    }
+
     private void WindErosion()
     {
-        throw new System.NotImplementedException();
+        float[,] heightMap = GetHeights();
+
+        float windDir = 30;
+        float sinAngle = -Mathf.Sin(Mathf.Deg2Rad * windDir);
+        float cosAngle = -Mathf.Cos(Mathf.Deg2Rad * windDir);
+
+        for (int y = -(heightMapRes - 1) * 2; y < heightMapRes * 2; y += 10) {
+
+            for (int x = -(heightMapRes - 1) * 2; x < heightMapRes * 2; x += 1) 
+            {
+                float noise = (float)Mathf.PerlinNoise(x * .06f, y * .06f) * 20 * erosionStrength;
+                int nx = (int)x;
+                int digy = (int)y + (int)noise;
+                int ny = (int)y + 5 + (int)noise; // half of increment
+
+                Vector2 digCoords = new Vector2(x * cosAngle - digy * sinAngle, digy * cosAngle + x * sinAngle);
+                Vector2 pileCoords = new Vector2(nx * cosAngle - ny * sinAngle, ny * cosAngle + nx * sinAngle);
+
+                if (!(pileCoords.x < 0 || pileCoords.x > (heightMapRes - 1) ||
+                    pileCoords.y < 0 || pileCoords.y > (heightMapRes - 1) ||
+                    (int)digCoords.x < 0 || (int)digCoords.x > (heightMapRes - 1) ||
+                    (int)digCoords.y < 0 || (int)digCoords.y > (heightMapRes - 1))) 
+                {
+                    heightMap[(int)digCoords.x, (int)digCoords.y] -= 0.001f;
+                    heightMap[(int)pileCoords.x, (int)pileCoords.y] += 0.001f;
+                }
+            }
+        }
+
+        terrainData.SetHeights(0, 0, heightMap); 
     }
 
     private void RiverErosion()
