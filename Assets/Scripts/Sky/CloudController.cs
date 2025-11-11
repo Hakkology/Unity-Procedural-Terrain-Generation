@@ -19,7 +19,7 @@ public class CloudController : MonoBehaviour
         Spawn();
     }
 
-    void Spawn() 
+    void Spawn()
     {
 
         //extend the range of the scale on either side of the manager centre
@@ -31,10 +31,47 @@ public class CloudController : MonoBehaviour
         startPosition = transform.position;
     }
 
+    void Paint()
+    {
+        ParticleSystem.Particle[] particles = new ParticleSystem.Particle[cloudSystem.particleCount];
+        cloudSystem.GetParticles(particles);
+        if (particles.Length > 0)
+        {
+
+            for (int i = 0; i < particles.Length; ++i)
+            {
+                float t = i / (float)particles.Length;
+                particles[i].startColor = Color.Lerp(lining, colour, t);
+            }
+            painted = true;
+            cloudSystem.SetParticles(particles, particles.Length);
+        }
+    }
+    
+    void Paintv2()
+    {
+        var particles = new ParticleSystem.Particle[cloudSystem.particleCount];
+        cloudSystem.GetParticles(particles);
+
+        if (particles.Length == 0) return;
+
+        for (int i = 0; i < particles.Length; i++)
+        {
+            float t = i / (float)(particles.Length - 1);
+            Color col = Color.Lerp(lining, colour, t);
+            col.a = 1f; // Alfa sabit
+            particles[i].startColor = col;
+        }
+
+        cloudSystem.SetParticles(particles, particles.Length);
+        painted = true;
+    }
+
 
     void Update()
     {
-        this.transform.Translate(0.0f, 0.0f, speed * Time.deltaTime);
+        // if (!painted) Paint();
+        transform.Translate(0.0f, 0.0f, speed * Time.deltaTime);
         if (Vector3.Distance(this.transform.position, startPosition) > distance) Spawn();
     }
 

@@ -63,7 +63,7 @@ public class BaseTerrainSky : MonoBehaviour, ICloudGenerate
             cc.distance = cloudRange;
 
             ParticleSystem cloudSystem = cloudGO.AddComponent<ParticleSystem>();
-            Renderer cloudRend = cloudGO.GetComponent<Renderer>();
+            ParticleSystemRenderer cloudRend = cloudGO.GetComponent<ParticleSystemRenderer>();
             cloudRend.material = cloudMaterial;
             cloudRend.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
             cloudRend.receiveShadows = false;
