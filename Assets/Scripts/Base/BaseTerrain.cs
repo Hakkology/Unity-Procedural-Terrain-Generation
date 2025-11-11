@@ -1,11 +1,14 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 public class BaseTerrain : MonoBehaviour, IGeneratable
 {
     [SerializeField]
     int terrainLayer = 0;
+    int skyLayer = 0;
 
     protected int heightMapRes => terrainData.heightmapResolution;
     protected float[,] GetHeights() => terrainData.GetHeights(0, 0, heightMapRes, heightMapRes);
@@ -44,6 +47,7 @@ public class BaseTerrain : MonoBehaviour, IGeneratable
 
         SerializedProperty layerProp = tagManager.FindProperty("layers");
         terrainLayer = AddTag(layerProp, "Terrain", TagType.Layer);
+        skyLayer = AddTag(layerProp, "Sky", TagType.Layer);
         tagManager.ApplyModifiedProperties();
 
         terrain.gameObject.tag = "Terrain";

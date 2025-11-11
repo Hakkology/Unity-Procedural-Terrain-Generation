@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 public class BaseTerrainSky : MonoBehaviour, ICloudGenerate
 {
@@ -51,6 +52,7 @@ public class BaseTerrainSky : MonoBehaviour, ICloudGenerate
             GameObject cloudGO = new GameObject();
             cloudGO.name = "Cloud" + c;
             cloudGO.tag = "Cloud";
+            cloudGO.layer = LayerMask.NameToLayer("Sky");
 
             cloudGO.transform.rotation = cloudManager.transform.rotation;
             cloudGO.transform.position = cloudManager.transform.position;
@@ -67,6 +69,17 @@ public class BaseTerrainSky : MonoBehaviour, ICloudGenerate
             cloudRend.material = cloudMaterial;
             cloudRend.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
             cloudRend.receiveShadows = false;
+
+            GameObject cloudProjector = new GameObject();
+            cloudProjector.name = "Shadow";
+            cloudProjector.transform.position = cloudGO.transform.position;
+            cloudProjector.transform.forward = Vector3.down;
+            cloudProjector.transform.parent = cloudGO.transform;
+
+            DecalProjector cp = cloudProjector.AddComponent<DecalProjector>();
+            cp.material = cloudShadowMaterial;
+            cp.renderingLayerMask = (uint)LayerMask.NameToLayer("Sky");
+            cp.size = new Vector3(10, 10, 100);
 
             ParticleSystem.MainModule main = cloudSystem.main;
             main.loop = false;
