@@ -28,6 +28,7 @@ It expands the original concepts with:
 - Voronoi (multi-peak, realistic, hybrid)
 - Random height fill
 - Heightmap import
+- Working with multiple terrains
 
 ### Post-Processing
 - Multi-iteration smoothing
@@ -72,6 +73,7 @@ bitki/detay dağıtımı, su yerleşimi ve basit bulut sistemi ile genişletilmi
 - Voronoi (çok tepeli, gerçekçi, hibrit)
 - Rastgele yükseklik doldurma
 - Texture’dan heightmap import
+- Birçok terrain de algoritmalarla çalışma
 
 ### Son İşleme
 - Çok iterasyonlu yumuşatma
