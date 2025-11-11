@@ -13,47 +13,79 @@ public class BaseTerrainSky : MonoBehaviour, ICloudGenerate
     public int numberOfClouds = 1;
     public int particlesPerClouds = 50;
     public int cloudParticleSize = 5;
-    public Vector3 size = Vector3.one;
+    public Vector3 cloudStartSize = Vector3.one;
     public Material cloudMaterial;
     public Material cloudShadowMaterial;
-    public Color Colour;
-    public Color Lining;
-    public float minSpeed = 0.2f;
-    public float maxSpeed = 0.5f;
-    public int distanceTravelled = 500;
+    public Color Colour = Color.white;
+    public Color Lining = Color.grey;
+    public float cloudMinSpeed = 0.2f;
+    public float cloudMaxSpeed = 0.5f;
+    public int cloudRange = 500;
 
 
     void OnEnable()
     {
         Debug.Log("Initializing terrain data");
-        //terrain = GetComponent<Terrain>();
         terrainData = terrain.terrainData;
-    }
-
-    List<Vector2> GenerateNeighbours(Vector2 pos, int width, int height) {
-
-        List<Vector2> neighbours = new List<Vector2>();
-
-        for (int y = -1; y < 2; ++y) { // between -1 and 1.
-
-            for (int x = -1; x < 2; ++x) {
-
-                if (!(x == 0 && y == 0)) {
-
-                    Vector2 nPos = new Vector2(
-                        Mathf.Clamp(pos.x + x, 0.0f, width - 1),
-                        Mathf.Clamp(pos.y + y, 0.0f, height - 1));
-
-                    if (!neighbours.Contains(nPos))
-                        neighbours.Add(nPos);
-                }
-            }
-        }
-        return neighbours;
     }
 
     public void GenerateClouds()
     {
-        
+        GameObject cloudManager = GameObject.Find("CloudManager");
+        if (!cloudManager)
+        {
+            cloudManager = new GameObject();
+            cloudManager.name = "CloudManager";
+            cloudManager.AddComponent<CloudManager>();
+            cloudManager.transform.position = terrain.transform.position;
+        }
+
+        GameObject[] allClouds = GameObject.FindGameObjectsWithTag("Cloud");
+
+        for (int i = 0; i < allClouds.Length; ++i)
+            DestroyImmediate(allClouds[i]);
+
+
+        for (int c = 0; c < numberOfClouds; ++c) {
+
+            GameObject cloudGO = new GameObject();
+            cloudGO.name = "Cloud" + c;
+            cloudGO.tag = "Cloud";
+
+            cloudGO.transform.rotation = cloudManager.transform.rotation;
+            cloudGO.transform.position = cloudManager.transform.position;
+            CloudController cc = cloudGO.AddComponent<CloudController>();
+            cc.lining = Lining;
+            cc.colour = Colour;
+            cc.numberOfParticles = particlesPerClouds;
+            cc.minSpeed = cloudMinSpeed;
+            cc.maxSpeed = cloudMaxSpeed;
+            cc.distance = cloudRange;
+
+            ParticleSystem cloudSystem = cloudGO.AddComponent<ParticleSystem>();
+            Renderer cloudRend = cloudGO.GetComponent<Renderer>();
+            cloudRend.material = cloudMaterial;
+            cloudRend.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            cloudRend.receiveShadows = false;
+
+            ParticleSystem.MainModule main = cloudSystem.main;
+            main.loop = false;
+            main.startLifetime = Mathf.Infinity;
+            main.startSpeed = 0;
+            main.startSize = cloudParticleSize;
+            main.startColor = Color.white;
+
+            var emission = cloudSystem.emission;
+            emission.rateOverTime = 0;
+            emission.SetBursts(new ParticleSystem.Burst[] {
+            new ParticleSystem.Burst(0.0f, (short)particlesPerClouds) });
+
+            var shape = cloudSystem.shape;
+            shape.shapeType = ParticleSystemShapeType.Sphere;
+            shape.scale = new Vector3(cloudStartSize.x, cloudStartSize.y, cloudStartSize.z);
+
+            cloudGO.transform.parent = cloudManager.transform;
+            cloudGO.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+        }
     }
 }

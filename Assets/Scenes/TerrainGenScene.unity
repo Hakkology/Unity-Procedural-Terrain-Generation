@@ -552,14 +552,14 @@ MonoBehaviour:
   numberOfClouds: 1
   particlesPerClouds: 50
   cloudParticleSize: 5
-  size: {x: 1, y: 1, z: 1}
-  cloudMaterial: {fileID: 0}
-  cloudShadowMaterial: {fileID: 0}
+  cloudStartSize: {x: 1, y: 0.5, z: 5}
+  cloudMaterial: {fileID: 2100000, guid: 9fdc6ecd6e86b024181b6373feb73e0e, type: 2}
+  cloudShadowMaterial: {fileID: 2100000, guid: 9dc758c4a1652864fb5113f73dcad921, type: 2}
   Colour: {r: 0, g: 0, b: 0, a: 0}
-  Lining: {r: 0, g: 0, b: 0, a: 0}
-  minSpeed: 0.2
-  maxSpeed: 0.5
-  distanceTravelled: 500
+  Lining: {r: 0.5, g: 0.5, b: 0.5, a: 0}
+  cloudMinSpeed: 0.2
+  cloudMaxSpeed: 0.5
+  cloudRange: 500
 --- !u!1001 &813027558
 PrefabInstance:
   m_ObjectHideFlags: 0
