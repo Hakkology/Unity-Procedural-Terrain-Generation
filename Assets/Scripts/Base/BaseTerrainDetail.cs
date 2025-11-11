@@ -467,11 +467,10 @@ public class BaseTerrainDetail : MonoBehaviour, ITexturable, IVegetative, ITerra
         tempHeightMap = GetHeights();
 
         int cX = 1;
-        int cY = UnityEngine.Random.Range(10, heightMapRes - 10);
+        int cY = Random.Range(10, heightMapRes - 10);
 
         while (cY >= 0 && cY < heightMapRes && cX > 0 && cX < heightMapRes)
         {
-
             CanyonCrawler(cX, cY, tempHeightMap[cX, cY] - digDepth, bankSlope, maxDepth);
             cX += Random.Range(1, 3);
             cY += Random.Range(-2, 3);
